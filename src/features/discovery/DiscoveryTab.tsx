@@ -35,7 +35,7 @@ export function DiscoveryTab({ state, setState }: DiscoveryTabProps) {
     <div className="space-y-6">
       {/* Client snapshot header */}
       <SectionCard title="Client Snapshot" subtitle="Basic client information">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Full Name">
             <Input
               value={state.clientName}
@@ -83,9 +83,9 @@ export function DiscoveryTab({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       {/* Discovery call guide */}
-      <div className="flex gap-4">
+      <div className="flex gap-5">
         {/* Section sidebar */}
-        <div className="hidden md:flex flex-col gap-1 w-52 flex-shrink-0">
+        <div className="hidden md:flex flex-col gap-1 w-56 flex-shrink-0">
           {discoverySections.map((s, i) => {
             const hasNote = !!(notes[s.id] && notes[s.id].trim());
             const isActive = i === activeSectionIdx;
@@ -93,22 +93,22 @@ export function DiscoveryTab({ state, setState }: DiscoveryTabProps) {
               <button
                 key={s.id}
                 onClick={() => setActiveSectionIdx(i)}
-                className={`flex items-center gap-2 text-left px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center gap-3 text-left px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                   isActive
                     ? "bg-yellow-600/20 text-yellow-400 border border-yellow-600/40"
-                    : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800"
                 }`}
               >
                 <span
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-xs border flex-shrink-0 ${
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 flex-shrink-0 ${
                     hasNote
-                      ? "bg-green-600/20 border-green-600/50 text-green-400"
+                      ? "bg-green-600/20 border-green-500 text-green-400"
                       : isActive
-                      ? "border-yellow-600/50 text-yellow-400"
-                      : "border-zinc-700 text-zinc-600"
+                      ? "border-yellow-500 text-yellow-400"
+                      : "border-zinc-700 text-zinc-500"
                   }`}
                 >
-                  {hasNote ? <CheckCircle2 size={10} /> : i + 1}
+                  {hasNote ? <CheckCircle2 size={12} /> : i + 1}
                 </span>
                 <span className="truncate">{s.title}</span>
               </button>
@@ -120,46 +120,44 @@ export function DiscoveryTab({ state, setState }: DiscoveryTabProps) {
         <div className="flex-1 min-w-0">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900 overflow-hidden">
             {/* Section header */}
-            <div className="px-5 py-4 border-b border-zinc-800 bg-zinc-800/50">
+            <div className="px-6 py-5 border-b border-zinc-800 bg-zinc-800/50">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-yellow-500 uppercase tracking-widest">
-                      Step {activeSectionIdx + 1} / {discoverySections.length}
-                    </span>
-                  </div>
-                  <h3 className="text-base font-semibold text-zinc-100 mt-0.5">
+                  <span className="text-sm font-bold text-yellow-500">
+                    Step {activeSectionIdx + 1} of {discoverySections.length}
+                  </span>
+                  <h3 className="text-xl font-bold text-zinc-100 mt-1">
                     {section.title}
                   </h3>
-                  <p className="text-xs text-zinc-500 mt-0.5">{section.purpose}</p>
+                  <p className="text-sm text-zinc-400 mt-1">{section.purpose}</p>
                 </div>
               </div>
             </div>
 
-            <div className="p-5 space-y-5">
+            <div className="p-6 space-y-6">
               {/* Script if present */}
               {section.script && (
-                <div className="bg-zinc-800/60 border border-yellow-600/20 rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare size={14} className="text-yellow-500" />
-                    <span className="text-xs font-semibold text-yellow-500 uppercase tracking-wide">
+                <div className="bg-zinc-800/60 border border-yellow-600/20 rounded-xl p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <MessageSquare size={16} className="text-yellow-500" />
+                    <span className="text-sm font-bold text-yellow-500 uppercase tracking-wide">
                       Suggested Script
                     </span>
                   </div>
-                  <p className="text-sm text-zinc-300 leading-relaxed italic">{section.script}</p>
+                  <p className="text-base text-zinc-300 leading-relaxed italic">{section.script}</p>
                 </div>
               )}
 
               {/* Questions */}
               {section.questions && section.questions.length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-3">
+                  <p className="text-sm font-bold text-zinc-400 uppercase tracking-wide mb-3">
                     Questions to Ask
                   </p>
-                  <ul className="space-y-2">
+                  <ul className="space-y-3">
                     {section.questions.map((q, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-zinc-300">
-                        <span className="text-yellow-600 mt-0.5 flex-shrink-0">›</span>
+                      <li key={i} className="flex items-start gap-3 text-base text-zinc-200">
+                        <span className="text-yellow-500 mt-0.5 flex-shrink-0 text-lg leading-none">›</span>
                         {q}
                       </li>
                     ))}
@@ -169,15 +167,15 @@ export function DiscoveryTab({ state, setState }: DiscoveryTabProps) {
 
               {/* Listen for */}
               {section.listenFor && section.listenFor.length > 0 && (
-                <div className="bg-blue-950/30 border border-blue-800/30 rounded-lg p-4">
-                  <p className="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-2">
+                <div className="bg-blue-950/30 border border-blue-800/30 rounded-xl p-5">
+                  <p className="text-sm font-bold text-blue-400 uppercase tracking-wide mb-3">
                     Listen For
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {section.listenFor.map((item, i) => (
                       <span
                         key={i}
-                        className="text-xs bg-blue-900/30 border border-blue-700/30 text-blue-300 rounded-full px-2 py-1"
+                        className="text-sm bg-blue-900/30 border border-blue-700/30 text-blue-300 rounded-full px-3 py-1.5"
                       >
                         {item}
                       </span>
@@ -189,8 +187,8 @@ export function DiscoveryTab({ state, setState }: DiscoveryTabProps) {
               {/* Notes area */}
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <StickyNote size={13} className="text-zinc-500" />
-                  <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                  <StickyNote size={15} className="text-zinc-400" />
+                  <p className="text-sm font-bold text-zinc-400">
                     Consultant Notes
                   </p>
                 </div>
@@ -203,23 +201,23 @@ export function DiscoveryTab({ state, setState }: DiscoveryTabProps) {
               </div>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between pt-1">
                 <button
                   onClick={() => setActiveSectionIdx((i) => Math.max(0, i - 1))}
                   disabled={activeSectionIdx === 0}
-                  className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-zinc-400 hover:text-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors border border-zinc-700 hover:border-zinc-500 rounded-lg"
                 >
-                  <ChevronLeft size={14} />
+                  <ChevronLeft size={16} />
                   Previous
                 </button>
 
                 {/* Mobile section indicator */}
-                <div className="flex gap-1 md:hidden">
+                <div className="flex gap-1.5 md:hidden">
                   {discoverySections.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setActiveSectionIdx(i)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
+                      className={`w-2.5 h-2.5 rounded-full transition-colors ${
                         i === activeSectionIdx ? "bg-yellow-500" : "bg-zinc-700"
                       }`}
                     />
@@ -233,10 +231,10 @@ export function DiscoveryTab({ state, setState }: DiscoveryTabProps) {
                     )
                   }
                   disabled={activeSectionIdx === discoverySections.length - 1}
-                  className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-yellow-500 hover:text-yellow-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-zinc-900 bg-yellow-600 hover:bg-yellow-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors rounded-lg"
                 >
                   Next
-                  <ChevronRight size={14} />
+                  <ChevronRight size={16} />
                 </button>
               </div>
             </div>
@@ -264,16 +262,16 @@ function OwnerOccupierForm({ state, setState }: DiscoveryTabProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 pt-2">
+      <div className="flex items-center gap-3 pt-2">
         <div className="h-px flex-1 bg-zinc-800" />
-        <span className="text-xs text-zinc-500 font-medium uppercase tracking-widest">
+        <span className="text-sm text-zinc-400 font-semibold">
           Owner Occupier Questionnaire
         </span>
         <div className="h-px flex-1 bg-zinc-800" />
       </div>
 
       <SectionCard title="Personal Information" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Full Name"><Input value={f.fullName} onChange={(e) => set("fullName", e.target.value)} placeholder="Jane Smith" /></Field>
           <Field label="Age"><Input type="number" value={f.age} onChange={(e) => set("age", e.target.value)} placeholder="35" /></Field>
           <Field label="Employment Status"><Input value={f.employmentStatus} onChange={(e) => set("employmentStatus", e.target.value)} placeholder="Full-time employed" /></Field>
@@ -284,7 +282,7 @@ function OwnerOccupierForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Current Living Situation" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Renting or Owning">
             <Select value={f.rentingOrOwning} onChange={(e) => set("rentingOrOwning", e.target.value)} options={[{value:"renting",label:"Renting"},{value:"owning",label:"Owning"}]} placeholder="Select..." />
           </Field>
@@ -296,7 +294,7 @@ function OwnerOccupierForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Purchase Motivation" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Why Are They Buying?"><Textarea value={f.whyBuying} onChange={(e) => set("whyBuying", e.target.value)} placeholder="Tired of renting, want stability..." /></Field>
           <Field label="What Triggered the Search?"><Textarea value={f.whatTriggeredSearch} onChange={(e) => set("whatTriggeredSearch", e.target.value)} placeholder="New baby, lease ending..." /></Field>
           <Field label="What Happens If They Don't Buy?"><Textarea value={f.ifDontBuy} onChange={(e) => set("ifDontBuy", e.target.value)} placeholder="Keep renting, losing money..." /></Field>
@@ -305,7 +303,7 @@ function OwnerOccupierForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Finance" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Broker Engaged?">
             <Select value={f.brokerEngaged} onChange={(e) => set("brokerEngaged", e.target.value)} options={[{value:"yes",label:"Yes"},{value:"no",label:"No"},{value:"looking",label:"Looking"}]} placeholder="Select..." />
           </Field>
@@ -317,7 +315,7 @@ function OwnerOccupierForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Property Requirements" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Preferred Locations"><Input value={f.preferredLocations} onChange={(e) => set("preferredLocations", e.target.value)} placeholder="Northside Brisbane" /></Field>
           <Field label="Property Type"><Input value={f.propertyType} onChange={(e) => set("propertyType", e.target.value)} placeholder="House" /></Field>
           <Field label="Bedrooms"><Input value={f.bedrooms} onChange={(e) => set("bedrooms", e.target.value)} placeholder="3–4" /></Field>
@@ -330,7 +328,7 @@ function OwnerOccupierForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Lifestyle & Decision Making" collapsible>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Proximity to Work"><Input value={f.proximityToWork} onChange={(e) => set("proximityToWork", e.target.value)} placeholder="<30 min commute" /></Field>
           <Field label="Schools"><Input value={f.schools} onChange={(e) => set("schools", e.target.value)} placeholder="Specific school zone" /></Field>
           <Field label="Transport"><Input value={f.transport} onChange={(e) => set("transport", e.target.value)} placeholder="Near train line" /></Field>
@@ -366,14 +364,14 @@ function InvestorForm({ state, setState }: DiscoveryTabProps) {
     <div className="space-y-4">
       <div className="flex items-center gap-2 pt-2">
         <div className="h-px flex-1 bg-zinc-800" />
-        <span className="text-xs text-zinc-500 font-medium uppercase tracking-widest">
+        <span className="text-sm text-zinc-400 font-semibold">
           Investor Questionnaire
         </span>
         <div className="h-px flex-1 bg-zinc-800" />
       </div>
 
       <SectionCard title="Personal Snapshot" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Full Name"><Input value={f.fullName} onChange={(e) => set("fullName", e.target.value)} placeholder="Jane Smith" /></Field>
           <Field label="Age"><Input type="number" value={f.age} onChange={(e) => set("age", e.target.value)} placeholder="42" /></Field>
           <Field label="Employment"><Input value={f.employment} onChange={(e) => set("employment", e.target.value)} placeholder="Full-time — IT Manager" /></Field>
@@ -383,7 +381,7 @@ function InvestorForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Investment Goals" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Primary Goal">
             <Select value={f.goalType} onChange={(e) => set("goalType", e.target.value)} options={[{value:"capital_growth",label:"Capital Growth"},{value:"cash_flow",label:"Cash Flow"},{value:"balanced",label:"Balanced"}]} placeholder="Select goal..." />
           </Field>
@@ -395,7 +393,7 @@ function InvestorForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Strategy" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Strategy Type">
             <Select value={f.strategyType} onChange={(e) => set("strategyType", e.target.value)} options={[{value:"buy_hold",label:"Buy and Hold"},{value:"value_add",label:"Value Add"},{value:"development",label:"Development"}]} placeholder="Select..." />
           </Field>
@@ -405,7 +403,7 @@ function InvestorForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Financial Position" collapsible defaultOpen>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Borrowing Capacity"><Input value={f.borrowingCapacity} onChange={(e) => set("borrowingCapacity", e.target.value)} placeholder="$1,200,000" /></Field>
           <Field label="Available Deposit"><Input value={f.deposit} onChange={(e) => set("deposit", e.target.value)} placeholder="$150,000" /></Field>
           <Field label="Usable Equity"><Input value={f.usableEquity} onChange={(e) => set("usableEquity", e.target.value)} placeholder="$200,000" /></Field>
@@ -419,7 +417,7 @@ function InvestorForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Criteria & Risk Profile" collapsible>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Budget Min"><Input value={f.budgetMin} onChange={(e) => set("budgetMin", e.target.value)} placeholder="$500,000" /></Field>
           <Field label="Budget Max"><Input value={f.budgetMax} onChange={(e) => set("budgetMax", e.target.value)} placeholder="$800,000" /></Field>
           <Field label="Target Locations"><Input value={f.locations} onChange={(e) => set("locations", e.target.value)} placeholder="SE QLD, regional VIC" /></Field>
@@ -440,7 +438,7 @@ function InvestorForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Timeline & Experience" collapsible>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Purchase Timeframe"><Input value={f.purchaseTimeframe} onChange={(e) => set("purchaseTimeframe", e.target.value)} placeholder="3–6 months" /></Field>
           <Field label="Actively Searching?">
             <Select value={f.activelySearching} onChange={(e) => set("activelySearching", e.target.value)} options={[{value:"yes",label:"Yes"},{value:"no",label:"No"}]} placeholder="Select..." />
@@ -455,7 +453,7 @@ function InvestorForm({ state, setState }: DiscoveryTabProps) {
       </SectionCard>
 
       <SectionCard title="Exit / Long Term Plan" collapsible>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Target Retirement Age"><Input type="number" value={f.retirementAgeTarget} onChange={(e) => set("retirementAgeTarget", e.target.value)} placeholder="55" /></Field>
           <Field label="Passive Income Target (p.a.)"><Input value={f.passiveIncomeTarget} onChange={(e) => set("passiveIncomeTarget", e.target.value)} placeholder="$150,000" /></Field>
           <Field label="Hold or Sell Long Term?">

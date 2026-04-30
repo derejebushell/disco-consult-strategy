@@ -47,7 +47,7 @@ export function CurrencyInput({ value, onChange, placeholder = "$0", className =
       onFocus={handleFocus}
       onBlur={handleBlur}
       placeholder={placeholder}
-      className={`w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-yellow-600 focus:ring-1 focus:ring-yellow-600/30 transition-colors ${className}`}
+      className={`w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-base text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-colors ${className}`}
     />
   );
 }

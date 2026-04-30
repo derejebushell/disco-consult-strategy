@@ -188,8 +188,8 @@ export function PortfolioCalculator({ state, setState }: Props) {
     <div className="space-y-6">
       {/* About You */}
       <SectionCard title="About You" subtitle="Household income and retirement timeline">
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <Field label="Household Type">
               <Select
                 value={calc.householdType}
@@ -220,10 +220,10 @@ export function PortfolioCalculator({ state, setState }: Props) {
 
           {/* Person One */}
           <div>
-            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-3">
-              {calc.householdType === "couple" ? "Person One" : "You"}
+            <p className="text-sm font-bold text-zinc-300 mb-3">
+              {calc.householdType === "couple" ? "Person One" : "Your Details"}
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               <Field label="Name">
                 <Input value={calc.personOneName} onChange={(e) => setCalc("personOneName", e.target.value)} placeholder="Jane" />
               </Field>
@@ -242,8 +242,8 @@ export function PortfolioCalculator({ state, setState }: Props) {
           {/* Person Two */}
           {calc.householdType === "couple" && (
             <div>
-              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-3">Person Two</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <p className="text-sm font-bold text-zinc-300 mb-3">Person Two</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <Field label="Name">
                   <Input value={calc.personTwoName} onChange={(e) => setCalc("personTwoName", e.target.value)} placeholder="John" />
                 </Field>
@@ -356,15 +356,15 @@ export function PortfolioCalculator({ state, setState }: Props) {
                 {val > 0 && (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-zinc-700">
                     <div className="text-center">
-                      <p className="text-xs text-zinc-500">Equity</p>
-                      <p className="text-sm font-semibold text-yellow-400">{formatCurrencyShort(equity)}</p>
+                      <p className="text-sm text-zinc-400">Equity</p>
+                      <p className="text-base font-bold text-yellow-400">{formatCurrencyShort(equity)}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-zinc-500">Usable Equity</p>
-                      <p className="text-sm font-semibold text-yellow-300">{formatCurrencyShort(usableEquity)}</p>
+                      <p className="text-sm text-zinc-400">Usable Equity</p>
+                      <p className="text-base font-bold text-yellow-300">{formatCurrencyShort(usableEquity)}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-zinc-500">
+                      <p className="text-sm text-zinc-400">
                         {prop.ownershipType === "investment" ? "Annual Cash Flow" : "Not Applicable"}
                       </p>
                       <p className={`text-sm font-semibold ${annualCashFlow >= 0 ? "text-green-400" : "text-red-400"}`}>
@@ -372,7 +372,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
                       </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-zinc-500">Payoff</p>
+                      <p className="text-sm text-zinc-400">Payoff</p>
                       <p className="text-sm font-semibold text-zinc-300">
                         {payoff.status === "ok" && payoff.years !== null
                           ? `${Math.round(payoff.years)} yrs`
@@ -417,7 +417,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
 
       {/* Cash and Assets */}
       <SectionCard title="Cash & Assets">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Cash Savings"><CurrencyInput value={calc.cashSavings} onChange={(v) => setCalc("cashSavings", v)} /></Field>
           <Field label="Super Balance"><CurrencyInput value={calc.superBalance} onChange={(v) => setCalc("superBalance", v)} /></Field>
           <Field label="Shares / Other Investments"><CurrencyInput value={calc.sharesValue} onChange={(v) => setCalc("sharesValue", v)} /></Field>
@@ -429,7 +429,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
 
       {/* Retirement Assumptions */}
       <SectionCard title="Retirement Assumptions">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <Field label="Annual Income Required in Retirement" hint="Today's dollars">
             <CurrencyInput value={calc.annualRetirementIncomeRequired} onChange={(v) => setCalc("annualRetirementIncomeRequired", v)} />
           </Field>
@@ -452,7 +452,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
           <span className="text-xs text-zinc-500 font-medium uppercase tracking-widest">Results</span>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <ResultCard
             title="Gross Monthly Income"
             value={formatCurrency(totalMonthlyIncome)}

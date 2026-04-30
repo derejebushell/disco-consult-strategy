@@ -44,35 +44,36 @@ export function ResultCard({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className={`rounded-xl border ${borderMap[color]} bg-zinc-900 p-5`}>
-      <div className="flex items-start justify-between gap-2 mb-1">
-        <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">{title}</p>
+    <div className={`rounded-xl border ${borderMap[color]} bg-zinc-900 p-6`}>
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <p className="text-sm font-semibold text-zinc-400">{title}</p>
         {info && (
           <button
             onClick={() => setInfoOpen((o) => !o)}
-            className="text-zinc-600 hover:text-yellow-500 transition-colors flex-shrink-0"
+            className="text-zinc-500 hover:text-yellow-400 transition-colors flex-shrink-0 mt-0.5"
+            title="How is this calculated?"
           >
-            <Info size={14} />
+            <Info size={16} />
           </button>
         )}
       </div>
-      <p className={`font-bold ${large ? "text-3xl" : "text-2xl"} ${colorMap[color]}`}>
+      <p className={`font-bold ${large ? "text-4xl" : "text-3xl"} ${colorMap[color]}`}>
         {value}
       </p>
-      {subtitle && <p className="text-xs text-zinc-500 mt-1">{subtitle}</p>}
+      {subtitle && <p className="text-sm text-zinc-500 mt-1.5">{subtitle}</p>}
 
       {info && infoOpen && (
-        <div className="mt-3 pt-3 border-t border-zinc-800 space-y-2">
-          <p className="text-xs text-zinc-400">{info.description}</p>
+        <div className="mt-4 pt-4 border-t border-zinc-800 space-y-2">
+          <p className="text-sm text-zinc-400">{info.description}</p>
           {info.formula && (
-            <div className="bg-zinc-800 rounded p-2">
-              <p className="text-xs font-mono text-zinc-300">{info.formula}</p>
+            <div className="bg-zinc-800 rounded-lg p-3">
+              <p className="text-sm font-mono text-zinc-300">{info.formula}</p>
             </div>
           )}
           {info.inputs && info.inputs.length > 0 && (
             <ul className="space-y-1">
               {info.inputs.map((inp, i) => (
-                <li key={i} className="text-xs text-zinc-500">• {inp}</li>
+                <li key={i} className="text-sm text-zinc-500">• {inp}</li>
               ))}
             </ul>
           )}
@@ -83,13 +84,13 @@ export function ResultCard({
         <div className="mt-3">
           <button
             onClick={() => setExpanded((e) => !e)}
-            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
           >
-            {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             {expanded ? "Hide detail" : "Show detail"}
           </button>
           {expanded && (
-            <div className="mt-2 pt-2 border-t border-zinc-800">{children}</div>
+            <div className="mt-3 pt-3 border-t border-zinc-800">{children}</div>
           )}
         </div>
       )}

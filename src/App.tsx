@@ -147,24 +147,24 @@ export default function QuantumDiscoveryApp() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col">
-      <header className="bg-zinc-900 border-b border-zinc-800 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-yellow-600 flex items-center justify-center">
-              <span className="text-xs font-black text-zinc-900">Q</span>
+      <header className="bg-zinc-900 border-b border-zinc-800 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-yellow-600 flex items-center justify-center flex-shrink-0">
+              <span className="text-base font-black text-zinc-900">Q</span>
             </div>
             <div>
-              <p className="text-sm font-bold text-zinc-100 leading-none">Quantum</p>
-              <p className="text-xs text-zinc-500 leading-none">Buyers Agents</p>
+              <p className="text-base font-bold text-zinc-100 leading-tight">Quantum Buyers Agents</p>
+              <p className="text-sm text-zinc-500 leading-tight">Access financial freedom through property</p>
             </div>
           </div>
-          <div className="hidden sm:block h-4 w-px bg-zinc-700" />
-          <span className="hidden sm:block text-xs text-zinc-600">Discovery · Consult · Strategy</span>
+          <div className="hidden sm:block h-6 w-px bg-zinc-700" />
+          <span className="hidden sm:block text-sm text-zinc-600 font-medium">Discovery · Consult · Strategy</span>
         </div>
         {state.clientName && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">Client:</span>
-            <span className="text-xs font-semibold text-yellow-400">{state.clientName}</span>
+          <div className="flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2">
+            <span className="text-sm text-zinc-400">Client:</span>
+            <span className="text-sm font-bold text-yellow-400">{state.clientName}</span>
           </div>
         )}
       </header>
@@ -174,25 +174,25 @@ export default function QuantumDiscoveryApp() {
         onStepChange={(step) => setState((s) => ({ ...s, activeStep: step }))}
       />
 
-      <main className="flex-1 px-4 py-6 max-w-6xl mx-auto w-full">
+      <main className="flex-1 px-6 py-8 max-w-6xl mx-auto w-full">
         {state.activeStep === "discovery" && <DiscoveryTab state={state} setState={setState} />}
         {state.activeStep === "consult" && <ConsultTab state={state} setState={setState} />}
         {state.activeStep === "strategy" && <StrategyTab state={state} setState={setState} />}
       </main>
 
-      <footer className="bg-zinc-900 border-t border-zinc-800 px-4 py-3 flex items-center justify-between">
+      <footer className="bg-zinc-900 border-t border-zinc-800 px-6 py-4 flex items-center justify-between">
         <button
           onClick={() => setState((s) => ({ ...s, activeStep: steps[Math.max(0, currentIdx - 1)] }))}
           disabled={currentIdx === 0}
-          className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors border border-zinc-800 hover:border-zinc-700 rounded-lg"
+          className="px-5 py-2.5 text-sm font-semibold text-zinc-300 hover:text-zinc-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors border border-zinc-700 hover:border-zinc-500 rounded-lg"
         >
           ← Previous
         </button>
-        <span className="text-xs text-zinc-600">Step {currentIdx + 1} of {steps.length}</span>
+        <span className="text-sm text-zinc-500 font-medium">Step {currentIdx + 1} of {steps.length}</span>
         <button
           onClick={() => setState((s) => ({ ...s, activeStep: steps[Math.min(steps.length - 1, currentIdx + 1)] }))}
           disabled={currentIdx === steps.length - 1}
-          className="px-4 py-2 text-xs font-semibold bg-yellow-600 text-zinc-900 hover:bg-yellow-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors rounded-lg"
+          className="px-5 py-2.5 text-sm font-bold bg-yellow-600 text-zinc-900 hover:bg-yellow-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors rounded-lg"
         >
           Next →
         </button>

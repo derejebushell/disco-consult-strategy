@@ -16,8 +16,8 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
   return (
     <div className="space-y-5">
       <div className="text-center mb-2">
-        <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Post Sign-On</p>
-        <h2 className="text-xl font-bold text-zinc-100">Strategy Plan</h2>
+        <p className="text-sm font-semibold text-zinc-400 mb-1">Post Sign-On</p>
+        <h2 className="text-2xl font-bold text-zinc-100">Strategy Plan</h2>
         <p className="text-sm text-zinc-500 mt-2 max-w-lg mx-auto">
           Build the client's acquisition strategy after they've engaged Quantum.
         </p>
@@ -25,7 +25,7 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
 
       {/* Client Vision */}
       <SectionCard title="Client Vision & Risk Profile">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Portfolio Vision" className="sm:col-span-2 lg:col-span-3">
             <Textarea
               value={strategy.portfolioVision}
@@ -73,7 +73,7 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
 
       {/* Buying Strategy */}
       <SectionCard title="Buying Strategy">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <Field label="Budget Min">
             <Input
               value={strategy.budgetMin}
@@ -148,9 +148,9 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
 
       {/* PIE Framework */}
       <SectionCard title="Market Analysis — PIE Framework" subtitle="Population · Infrastructure · Employment" collapsible>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <div className="space-y-2">
-            <p className="text-xs font-bold text-yellow-500 uppercase tracking-wide">Population</p>
+            <p className="text-sm font-bold text-yellow-500 mb-1">Population</p>
             <Textarea
               value={strategy.piePopulation}
               onChange={(e) => set("piePopulation", e.target.value)}
@@ -159,7 +159,7 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
             />
           </div>
           <div className="space-y-2">
-            <p className="text-xs font-bold text-yellow-500 uppercase tracking-wide">Infrastructure</p>
+            <p className="text-sm font-bold text-yellow-500 mb-1">Infrastructure</p>
             <Textarea
               value={strategy.pieInfrastructure}
               onChange={(e) => set("pieInfrastructure", e.target.value)}
@@ -168,7 +168,7 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
             />
           </div>
           <div className="space-y-2">
-            <p className="text-xs font-bold text-yellow-500 uppercase tracking-wide">Employment</p>
+            <p className="text-sm font-bold text-yellow-500 mb-1">Employment</p>
             <Textarea
               value={strategy.pieEmployment}
               onChange={(e) => set("pieEmployment", e.target.value)}
@@ -181,7 +181,7 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
 
       {/* Acquisition Plan */}
       <SectionCard title="Acquisition Plan & Next Steps">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Acquisition Plan" className="sm:col-span-2">
             <Textarea
               value={strategy.acquisitionPlan}

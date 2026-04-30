@@ -29,16 +29,18 @@ export function StepNav({ activeStep, onStepChange }: StepNavProps) {
           <button
             key={step.id}
             onClick={() => onStepChange(step.id)}
-            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all -mb-px ${
+            className={`flex items-center gap-2.5 px-5 py-4 text-base font-semibold border-b-2 transition-all -mb-px ${
               isActive
                 ? "border-yellow-500 text-yellow-400"
-                : "border-transparent text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"
+                : "border-transparent text-zinc-500 hover:text-zinc-200 hover:border-zinc-600"
             }`}
           >
-            <span className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold border border-current opacity-60">
+            <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold border-2 ${
+              isActive ? "border-yellow-500 text-yellow-400" : "border-zinc-600 text-zinc-500"
+            }`}>
               {i + 1}
             </span>
-            <Icon size={14} />
+            <Icon size={17} />
             <span>{step.label}</span>
           </button>
         );

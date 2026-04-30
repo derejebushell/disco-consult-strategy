@@ -121,7 +121,7 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
     <div className="space-y-6">
       {/* Controls */}
       <SectionCard title="Dashboard Controls">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <Field label="Select Property">
             <Select
               value={performance.selectedPropertyIdx}
@@ -165,22 +165,22 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
       {/* Property header */}
       {prop && (
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
             <div>
-              <p className="text-xs text-zinc-500 uppercase tracking-wide">Property</p>
-              <p className="text-sm font-semibold text-zinc-100 mt-1">{prop.suburb || "Unnamed Property"}</p>
+              <p className="text-sm font-semibold text-zinc-400">Property</p>
+              <p className="text-base font-bold text-zinc-100 mt-1">{prop.suburb || "Unnamed Property"}</p>
             </div>
             <div>
-              <p className="text-xs text-zinc-500 uppercase tracking-wide">Purchase Price</p>
-              <p className="text-sm font-semibold text-yellow-400 mt-1">{formatCurrency(purchasePrice)}</p>
+              <p className="text-sm font-semibold text-zinc-400">Purchase Price</p>
+              <p className="text-base font-bold text-yellow-400 mt-1">{formatCurrency(purchasePrice)}</p>
             </div>
             <div>
-              <p className="text-xs text-zinc-500 uppercase tracking-wide">Purchase Date</p>
-              <p className="text-sm font-semibold text-zinc-100 mt-1">{prop.purchaseDate || "Today"}</p>
+              <p className="text-sm font-semibold text-zinc-400">Purchase Date</p>
+              <p className="text-base font-bold text-zinc-100 mt-1">{prop.purchaseDate || "Today"}</p>
             </div>
             <div>
-              <p className="text-xs text-zinc-500 uppercase tracking-wide">Strategy</p>
-              <p className="text-sm font-semibold text-zinc-100 mt-1">
+              <p className="text-sm font-semibold text-zinc-400">Strategy</p>
+              <p className="text-base font-bold text-zinc-100 mt-1">
                 {prop.ownershipType === "investment" ? "Investment" : "Owner Occupier"}
               </p>
             </div>
@@ -189,28 +189,28 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
       )}
 
       {/* Primary metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         <div className="rounded-xl border border-yellow-600/30 bg-zinc-900 p-4 text-center">
-          <p className="text-xs text-zinc-500 uppercase tracking-wide">10-Year Total Performance</p>
+          <p className="text-sm font-semibold text-zinc-400">10-Year Total Performance</p>
           <p className="text-2xl font-bold text-yellow-400 mt-1">{formatCurrencyShort(totalPerf10)}</p>
-          <p className="text-xs text-zinc-600 mt-1">Equity + cash flow</p>
+          <p className="text-sm text-zinc-500 mt-1">Equity + cash flow</p>
         </div>
         <div className="rounded-xl border border-green-600/30 bg-zinc-900 p-4 text-center">
-          <p className="text-xs text-zinc-500 uppercase tracking-wide">Return on Capital</p>
+          <p className="text-sm font-semibold text-zinc-400">Return on Capital</p>
           <p className="text-2xl font-bold text-green-400 mt-1">{formatPercent(returnOnCapital)}</p>
-          <p className="text-xs text-zinc-600 mt-1">Over 10 years</p>
+          <p className="text-sm text-zinc-500 mt-1">Over 10 years</p>
         </div>
         <div className="rounded-xl border border-yellow-600/30 bg-zinc-900 p-4 text-center">
-          <p className="text-xs text-zinc-500 uppercase tracking-wide">Equity at Year 10</p>
+          <p className="text-sm font-semibold text-zinc-400">Equity at Year 10</p>
           <p className="text-2xl font-bold text-yellow-400 mt-1">{formatCurrencyShort(equity10)}</p>
-          <p className="text-xs text-zinc-600 mt-1">Projected</p>
+          <p className="text-sm text-zinc-500 mt-1">Projected</p>
         </div>
         <div className="rounded-xl border border-blue-600/30 bg-zinc-900 p-4 text-center">
-          <p className="text-xs text-zinc-500 uppercase tracking-wide">Capital Returned</p>
+          <p className="text-sm font-semibold text-zinc-400">Capital Returned</p>
           <p className="text-2xl font-bold text-blue-400 mt-1">
             {capitalReturnedYear !== null ? `Year ${capitalReturnedYear}` : "Not yet"}
           </p>
-          <p className="text-xs text-zinc-600 mt-1">Via cash flow</p>
+          <p className="text-sm text-zinc-500 mt-1">Via cash flow</p>
         </div>
       </div>
 
@@ -272,7 +272,7 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
       )}
 
       {/* Secondary metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
         {[
           { label: "Gross Yield", value: formatPercent(grossYield), color: "text-yellow-400" },
           { label: "Weekly Cash Flow", value: formatCurrency(annualCashFlow / 52), color: annualCashFlow >= 0 ? "text-green-400" : "text-red-400" },
@@ -290,7 +290,7 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
           { label: "Initial Capital", value: formatCurrencyShort(initialCapital), color: "text-zinc-100" },
         ].map((m) => (
           <div key={m.label} className="rounded-lg border border-zinc-800 bg-zinc-900 p-3">
-            <p className="text-xs text-zinc-500 uppercase tracking-wide">{m.label}</p>
+            <p className="text-sm font-semibold text-zinc-400">{m.label}</p>
             <p className={`text-lg font-bold mt-1 ${m.color}`}>{m.value}</p>
           </div>
         ))}
