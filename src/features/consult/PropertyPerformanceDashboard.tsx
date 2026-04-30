@@ -111,7 +111,7 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
 
   if (properties.length === 0) {
     return (
-      <div className="flex items-center justify-center h-40 text-zinc-600 text-sm">
+      <div className="flex items-center justify-center h-40 text-zinc-600 text-base">
         Add properties in the Portfolio Calculator to use this dashboard.
       </div>
     );
@@ -164,23 +164,23 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
 
       {/* Property header */}
       {prop && (
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
             <div>
-              <p className="text-sm font-semibold text-zinc-400">Property</p>
-              <p className="text-base font-bold text-zinc-100 mt-1">{prop.suburb || "Unnamed Property"}</p>
+              <p className="text-base font-semibold text-zinc-400">Property</p>
+              <p className="text-lg font-bold text-zinc-100 mt-1">{prop.suburb || "Unnamed Property"}</p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-zinc-400">Purchase Price</p>
-              <p className="text-base font-bold text-yellow-400 mt-1">{formatCurrency(purchasePrice)}</p>
+              <p className="text-base font-semibold text-zinc-400">Purchase Price</p>
+              <p className="text-lg font-bold text-yellow-400 mt-1">{formatCurrency(purchasePrice)}</p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-zinc-400">Purchase Date</p>
-              <p className="text-base font-bold text-zinc-100 mt-1">{prop.purchaseDate || "Today"}</p>
+              <p className="text-base font-semibold text-zinc-400">Purchase Date</p>
+              <p className="text-lg font-bold text-zinc-100 mt-1">{prop.purchaseDate || "Today"}</p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-zinc-400">Strategy</p>
-              <p className="text-base font-bold text-zinc-100 mt-1">
+              <p className="text-base font-semibold text-zinc-400">Strategy</p>
+              <p className="text-lg font-bold text-zinc-100 mt-1">
                 {prop.ownershipType === "investment" ? "Investment" : "Owner Occupier"}
               </p>
             </div>
@@ -190,41 +190,41 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
 
       {/* Primary metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="rounded-xl border border-yellow-600/30 bg-zinc-900 p-4 text-center">
-          <p className="text-sm font-semibold text-zinc-400">10-Year Total Performance</p>
+        <div className="rounded-2xl border border-yellow-600/30 bg-zinc-900 p-6 text-center">
+          <p className="text-base font-semibold text-zinc-400">10-Year Total Performance</p>
           <p className="text-2xl font-bold text-yellow-400 mt-1">{formatCurrencyShort(totalPerf10)}</p>
-          <p className="text-sm text-zinc-500 mt-1">Equity + cash flow</p>
+          <p className="text-base text-zinc-500 mt-1">Equity + cash flow</p>
         </div>
-        <div className="rounded-xl border border-green-600/30 bg-zinc-900 p-4 text-center">
-          <p className="text-sm font-semibold text-zinc-400">Return on Capital</p>
+        <div className="rounded-2xl border border-green-600/30 bg-zinc-900 p-6 text-center">
+          <p className="text-base font-semibold text-zinc-400">Return on Capital</p>
           <p className="text-2xl font-bold text-green-400 mt-1">{formatPercent(returnOnCapital)}</p>
-          <p className="text-sm text-zinc-500 mt-1">Over 10 years</p>
+          <p className="text-base text-zinc-500 mt-1">Over 10 years</p>
         </div>
-        <div className="rounded-xl border border-yellow-600/30 bg-zinc-900 p-4 text-center">
-          <p className="text-sm font-semibold text-zinc-400">Equity at Year 10</p>
+        <div className="rounded-2xl border border-yellow-600/30 bg-zinc-900 p-6 text-center">
+          <p className="text-base font-semibold text-zinc-400">Equity at Year 10</p>
           <p className="text-2xl font-bold text-yellow-400 mt-1">{formatCurrencyShort(equity10)}</p>
-          <p className="text-sm text-zinc-500 mt-1">Projected</p>
+          <p className="text-base text-zinc-500 mt-1">Projected</p>
         </div>
-        <div className="rounded-xl border border-blue-600/30 bg-zinc-900 p-4 text-center">
-          <p className="text-sm font-semibold text-zinc-400">Capital Returned</p>
+        <div className="rounded-2xl border border-blue-600/30 bg-zinc-900 p-6 text-center">
+          <p className="text-base font-semibold text-zinc-400">Capital Returned</p>
           <p className="text-2xl font-bold text-blue-400 mt-1">
             {capitalReturnedYear !== null ? `Year ${capitalReturnedYear}` : "Not yet"}
           </p>
-          <p className="text-sm text-zinc-500 mt-1">Via cash flow</p>
+          <p className="text-base text-zinc-500 mt-1">Via cash flow</p>
         </div>
       </div>
 
       {/* Graph */}
       {data.length > 0 && (
         <SectionCard title="Performance Graph">
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-3 mb-5">
             {LINE_CONFIG.map((line) => {
               const active = (performance.selectedLines as string[]).includes(line.key);
               return (
                 <button
                   key={line.key}
                   onClick={() => toggleLine(line.key)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
                     active
                       ? "border-current opacity-100"
                       : "border-zinc-700 opacity-40 hover:opacity-60"
@@ -232,7 +232,7 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
                   style={{ color: active ? line.color : "#71717a" }}
                 >
                   <span
-                    className="w-2 h-2 rounded-full"
+                    className="w-2.5 h-2.5 rounded-full"
                     style={{ background: line.color }}
                   />
                   {line.label}
@@ -289,14 +289,14 @@ export function PropertyPerformanceDashboard({ state, setState }: Props) {
           },
           { label: "Initial Capital", value: formatCurrencyShort(initialCapital), color: "text-zinc-100" },
         ].map((m) => (
-          <div key={m.label} className="rounded-lg border border-zinc-800 bg-zinc-900 p-3">
-            <p className="text-sm font-semibold text-zinc-400">{m.label}</p>
-            <p className={`text-lg font-bold mt-1 ${m.color}`}>{m.value}</p>
+          <div key={m.label} className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+            <p className="text-base font-semibold text-zinc-400">{m.label}</p>
+            <p className={`text-xl font-bold mt-1 ${m.color}`}>{m.value}</p>
           </div>
         ))}
       </div>
 
-      <p className="text-xs text-zinc-600 text-center">
+      <p className="text-sm text-zinc-600 text-center">
         Tax benefit estimates are indicative only. Confirm with your accountant. Projections assume stable market conditions and are not guaranteed.
       </p>
     </div>

@@ -16,9 +16,9 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
   return (
     <div className="space-y-5">
       <div className="text-center mb-2">
-        <p className="text-sm font-semibold text-zinc-400 mb-1">Post Sign-On</p>
-        <h2 className="text-2xl font-bold text-zinc-100">Strategy Plan</h2>
-        <p className="text-sm text-zinc-500 mt-2 max-w-lg mx-auto">
+        <p className="text-base font-semibold text-zinc-400 mb-1">Post Sign-On</p>
+        <h2 className="text-3xl font-bold text-zinc-100">Strategy Plan</h2>
+        <p className="text-base text-zinc-500 mt-2 max-w-lg mx-auto">
           Build the client's acquisition strategy after they've engaged Quantum.
         </p>
       </div>
@@ -150,7 +150,7 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
       <SectionCard title="Market Analysis — PIE Framework" subtitle="Population · Infrastructure · Employment" collapsible>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <div className="space-y-2">
-            <p className="text-sm font-bold text-yellow-500 mb-1">Population</p>
+            <p className="text-base font-bold text-yellow-500 mb-2">Population</p>
             <Textarea
               value={strategy.piePopulation}
               onChange={(e) => set("piePopulation", e.target.value)}
@@ -159,7 +159,7 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
             />
           </div>
           <div className="space-y-2">
-            <p className="text-sm font-bold text-yellow-500 mb-1">Infrastructure</p>
+            <p className="text-base font-bold text-yellow-500 mb-2">Infrastructure</p>
             <Textarea
               value={strategy.pieInfrastructure}
               onChange={(e) => set("pieInfrastructure", e.target.value)}
@@ -168,7 +168,7 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
             />
           </div>
           <div className="space-y-2">
-            <p className="text-sm font-bold text-yellow-500 mb-1">Employment</p>
+            <p className="text-base font-bold text-yellow-500 mb-2">Employment</p>
             <Textarea
               value={strategy.pieEmployment}
               onChange={(e) => set("pieEmployment", e.target.value)}
@@ -210,8 +210,8 @@ export function StrategyTab({ state, setState }: StrategyTabProps) {
       </SectionCard>
 
       {/* Disclaimer */}
-      <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
-        <p className="text-xs text-zinc-600 leading-relaxed">
+      <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
+        <p className="text-sm text-zinc-600 leading-relaxed">
           This strategy document is prepared for discussion purposes only. It is not financial advice, tax advice, or a credit assessment. All projections are estimates. Investment performance is not guaranteed. Borrowing capacity must be confirmed by a licensed mortgage broker. Tax implications should be discussed with your accountant.
         </p>
       </div>

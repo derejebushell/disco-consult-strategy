@@ -23,34 +23,30 @@ export function SectionCard({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div
-      className={`rounded-xl border border-zinc-800 bg-zinc-900 overflow-hidden ${className}`}
-    >
+    <div className={`rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden ${className}`}>
       <div
-        className={`flex items-center justify-between px-6 py-5 border-b border-zinc-800 ${
+        className={`flex items-center justify-between px-8 py-6 border-b border-zinc-800 ${
           collapsible ? "cursor-pointer select-none hover:bg-zinc-800/40 transition-colors" : ""
         }`}
         onClick={collapsible ? () => setOpen((o) => !o) : undefined}
       >
         <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-base font-bold text-zinc-100">
-              {title}
-            </h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-xl font-bold text-zinc-100">{title}</h3>
             {badge}
           </div>
           {subtitle && (
-            <p className="text-sm text-zinc-500 mt-0.5">{subtitle}</p>
+            <p className="text-base text-zinc-400 mt-1">{subtitle}</p>
           )}
         </div>
         {collapsible && (
-          <div className="text-zinc-400">
-            {open ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          <div className="text-zinc-400 ml-4">
+            {open ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
           </div>
         )}
       </div>
       {(!collapsible || open) && (
-        <div className="p-6">{children}</div>
+        <div className="p-8">{children}</div>
       )}
     </div>
   );

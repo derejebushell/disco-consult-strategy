@@ -21,7 +21,7 @@ interface StepNavProps {
 
 export function StepNav({ activeStep, onStepChange }: StepNavProps) {
   return (
-    <nav className="flex items-center gap-1 bg-zinc-900 border-b border-zinc-800 px-4 py-0">
+    <nav className="flex items-center gap-2 bg-zinc-900 border-b border-zinc-800 px-6 py-0">
       {steps.map((step, i) => {
         const Icon = step.icon;
         const isActive = activeStep === step.id;
@@ -29,18 +29,18 @@ export function StepNav({ activeStep, onStepChange }: StepNavProps) {
           <button
             key={step.id}
             onClick={() => onStepChange(step.id)}
-            className={`flex items-center gap-2.5 px-5 py-4 text-base font-semibold border-b-2 transition-all -mb-px ${
+            className={`flex items-center gap-3 px-6 py-5 text-xl font-semibold border-b-2 transition-all -mb-px ${
               isActive
                 ? "border-yellow-500 text-yellow-400"
-                : "border-transparent text-zinc-500 hover:text-zinc-200 hover:border-zinc-600"
+                : "border-transparent text-zinc-400 hover:text-zinc-100 hover:border-zinc-600"
             }`}
           >
-            <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold border-2 ${
+            <span className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold border-2 flex-shrink-0 ${
               isActive ? "border-yellow-500 text-yellow-400" : "border-zinc-600 text-zinc-500"
             }`}>
               {i + 1}
             </span>
-            <Icon size={17} />
+            <Icon size={20} />
             <span>{step.label}</span>
           </button>
         );

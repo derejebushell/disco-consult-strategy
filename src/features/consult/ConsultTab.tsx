@@ -38,7 +38,7 @@ export function ConsultTab({ state, setState }: ConsultTabProps) {
           <select
             value={activeConsultSection}
             onChange={(e) => setSection(e.target.value)}
-            className="appearance-none bg-zinc-800 border border-zinc-700 rounded-lg pl-4 pr-10 py-3 text-base font-medium text-zinc-100 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 cursor-pointer"
+            className="appearance-none bg-zinc-800 border border-zinc-700 rounded-xl pl-5 pr-12 py-4 text-lg font-medium text-zinc-100 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 cursor-pointer"
           >
             {CONSULT_SECTIONS.map((s) => (
               <option key={s.id} value={s.id}>
@@ -46,9 +46,9 @@ export function ConsultTab({ state, setState }: ConsultTabProps) {
               </option>
             ))}
           </select>
-          <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+          <ChevronDown size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
         </div>
-        <p className="text-sm text-zinc-500 hidden sm:block">
+        <p className="text-base text-zinc-500 hidden sm:block">
           Navigate through the consult sections
         </p>
       </div>
@@ -102,9 +102,9 @@ function ClientJourney() {
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <p className="text-sm font-semibold text-zinc-400 mb-2">How We Work</p>
-        <h2 className="text-2xl font-bold text-zinc-100">Your Journey with Quantum</h2>
-        <p className="text-sm text-zinc-500 mt-2 max-w-lg mx-auto">
+        <p className="text-base font-semibold text-zinc-400 mb-2">How We Work</p>
+        <h2 className="text-3xl font-bold text-zinc-100">Your Journey with Quantum</h2>
+        <p className="text-base text-zinc-500 mt-2 max-w-lg mx-auto">
           A clear, repeatable process built around your goals — from first conversation to settled property.
         </p>
       </div>
@@ -112,15 +112,15 @@ function ClientJourney() {
         {steps.map((step) => (
           <div
             key={step.number}
-            className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-5 hover:border-yellow-600/40 transition-colors"
+            className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8 flex flex-col gap-5 hover:border-yellow-600/40 transition-colors"
           >
             <div className="flex items-center gap-3">
               <span className="text-3xl font-black text-yellow-600/30">{step.number}</span>
-              <h3 className="text-lg font-bold text-zinc-100">{step.title}</h3>
+              <h3 className="text-xl font-bold text-zinc-100">{step.title}</h3>
             </div>
-            <p className="text-sm text-zinc-400 leading-relaxed">{step.description}</p>
-            <div className="mt-auto pt-3 border-t border-zinc-800">
-              <p className="text-sm text-zinc-500">{step.detail}</p>
+            <p className="text-base text-zinc-400 leading-relaxed">{step.description}</p>
+            <div className="mt-auto pt-4 border-t border-zinc-800">
+              <p className="text-base text-zinc-500">{step.detail}</p>
             </div>
           </div>
         ))}
@@ -142,10 +142,10 @@ function PersonalisedSnapshot({ state }: { state: AppState }) {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border border-yellow-600/30 bg-gradient-to-br from-zinc-900 to-zinc-800 p-6">
-        <p className="text-sm font-bold text-yellow-500 mb-3">Personalised for</p>
-        <h2 className="text-2xl font-bold text-zinc-100 mb-4">{name}</h2>
-        <p className="text-sm text-zinc-300 leading-relaxed">
+      <div className="rounded-2xl border border-yellow-600/30 bg-gradient-to-br from-zinc-900 to-zinc-800 p-8">
+        <p className="text-base font-bold text-yellow-500 mb-3">Personalised for</p>
+        <h2 className="text-3xl font-bold text-zinc-100 mb-4">{name}</h2>
+        <p className="text-base text-zinc-300 leading-relaxed">
           Based on what you've shared today, you're an {clientType} looking to move forward in{" "}
           <span className="text-yellow-400 font-medium">{locations}</span>. Here's a summary of
           where you are and what we heard.
@@ -154,33 +154,33 @@ function PersonalisedSnapshot({ state }: { state: AppState }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {goals && (
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-            <p className="text-sm font-bold text-yellow-500 mb-2">Goals</p>
-            <p className="text-sm text-zinc-300 whitespace-pre-wrap">{goals}</p>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <p className="text-base font-bold text-yellow-500 mb-2">Goals</p>
+            <p className="text-base text-zinc-300 whitespace-pre-wrap">{goals}</p>
           </div>
         )}
         {financeNotes && (
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-            <p className="text-sm font-bold text-yellow-500 mb-2">Finance Position</p>
-            <p className="text-sm text-zinc-300 whitespace-pre-wrap">{financeNotes}</p>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <p className="text-base font-bold text-yellow-500 mb-2">Finance Position</p>
+            <p className="text-base text-zinc-300 whitespace-pre-wrap">{financeNotes}</p>
           </div>
         )}
         {painPoints && (
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-            <p className="text-sm font-bold text-yellow-500 mb-2">What's Been Getting in the Way</p>
-            <p className="text-sm text-zinc-300 whitespace-pre-wrap">{painPoints}</p>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <p className="text-base font-bold text-yellow-500 mb-2">What's Been Getting in the Way</p>
+            <p className="text-base text-zinc-300 whitespace-pre-wrap">{painPoints}</p>
           </div>
         )}
         {timelineNotes && (
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-            <p className="text-sm font-bold text-yellow-500 mb-2">Timeline</p>
-            <p className="text-sm text-zinc-300 whitespace-pre-wrap">{timelineNotes}</p>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <p className="text-base font-bold text-yellow-500 mb-2">Timeline</p>
+            <p className="text-base text-zinc-300 whitespace-pre-wrap">{timelineNotes}</p>
           </div>
         )}
       </div>
 
       {!goals && !financeNotes && !painPoints && !timelineNotes && (
-        <div className="text-center py-8 text-zinc-600 text-sm">
+        <div className="text-center py-8 text-zinc-600 text-base">
           Complete the Discovery sections to populate this snapshot.
         </div>
       )}
@@ -219,18 +219,18 @@ function CurrentPosition({ state }: { state: AppState }) {
   return (
     <div className="space-y-4">
       <div className="text-center mb-4">
-        <p className="text-sm font-semibold text-zinc-400 mb-1">Where You Stand Today</p>
-        <h2 className="text-xl font-bold text-zinc-100">Your Current Position</h2>
+        <p className="text-base font-semibold text-zinc-400 mb-1">Where You Stand Today</p>
+        <h2 className="text-2xl font-bold text-zinc-100">Your Current Position</h2>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map((item) => (
-          <div key={item.label} className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-            <p className="text-sm font-semibold text-zinc-400">{item.label}</p>
-            <p className={`text-xl font-bold mt-1 ${item.color}`}>{formatCurrency(item.value)}</p>
+          <div key={item.label} className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <p className="text-base font-semibold text-zinc-400">{item.label}</p>
+            <p className={`text-2xl font-bold mt-1 ${item.color}`}>{formatCurrency(item.value)}</p>
           </div>
         ))}
       </div>
-      <p className="text-xs text-zinc-600 text-center">Populate the Portfolio Calculator to see your current position.</p>
+      <p className="text-sm text-zinc-600 text-center">Populate the Portfolio Calculator to see your current position.</p>
     </div>
   );
 }
@@ -270,48 +270,48 @@ function FutureOutcome({ state }: { state: AppState }) {
   return (
     <div className="space-y-5">
       <div className="text-center mb-4">
-        <p className="text-sm font-semibold text-zinc-400 mb-1">Looking Ahead</p>
-        <h2 className="text-xl font-bold text-zinc-100">Your Future Outcome</h2>
+        <p className="text-base font-semibold text-zinc-400 mb-1">Looking Ahead</p>
+        <h2 className="text-2xl font-bold text-zinc-100">Your Future Outcome</h2>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div className="rounded-xl border border-yellow-600/30 bg-zinc-900 p-5">
-          <p className="text-sm font-semibold text-zinc-400">Projected Portfolio Value</p>
+        <div className="rounded-2xl border border-yellow-600/30 bg-zinc-900 p-6">
+          <p className="text-base font-semibold text-zinc-400">Projected Portfolio Value</p>
           <p className="text-2xl font-bold text-yellow-400 mt-1">{formatCurrency(retirement.projectedInvestmentValue)}</p>
-          <p className="text-sm text-zinc-500 mt-1">At retirement (investment properties)</p>
+          <p className="text-base text-zinc-500 mt-1">At retirement (investment properties)</p>
         </div>
-        <div className="rounded-xl border border-green-600/30 bg-zinc-900 p-5">
-          <p className="text-sm font-semibold text-zinc-400">Projected Passive Income</p>
+        <div className="rounded-2xl border border-green-600/30 bg-zinc-900 p-6">
+          <p className="text-base font-semibold text-zinc-400">Projected Passive Income</p>
           <p className="text-2xl font-bold text-green-400 mt-1">{formatCurrency(retirement.projectedPassiveIncome)}</p>
-          <p className="text-sm text-zinc-500 mt-1">Annual, at retirement</p>
+          <p className="text-base text-zinc-500 mt-1">Annual, at retirement</p>
         </div>
-        <div className={`rounded-xl border ${isSurplus ? "border-green-600/30" : "border-red-600/30"} bg-zinc-900 p-5`}>
-          <p className="text-sm font-semibold text-zinc-400">Annual {isSurplus ? "Surplus" : "Shortfall"}</p>
+        <div className={`rounded-2xl border ${isSurplus ? "border-green-600/30" : "border-red-600/30"} bg-zinc-900 p-6`}>
+          <p className="text-base font-semibold text-zinc-400">Annual {isSurplus ? "Surplus" : "Shortfall"}</p>
           <p className={`text-2xl font-bold mt-1 ${isSurplus ? "text-green-400" : "text-red-400"}`}>
             {formatCurrency(Math.abs(retirement.annualPosition))}
           </p>
-          <p className="text-sm text-zinc-500 mt-1">vs required {formatCurrency(annualRetirementIncome)}/yr</p>
+          <p className="text-base text-zinc-500 mt-1">vs required {formatCurrency(annualRetirementIncome)}/yr</p>
         </div>
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-          <p className="text-sm font-semibold text-zinc-400">Years to Retirement</p>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+          <p className="text-base font-semibold text-zinc-400">Years to Retirement</p>
           <p className="text-2xl font-bold text-zinc-100 mt-1">{Math.max(0, yearsToRetirement)}</p>
-          <p className="text-sm text-zinc-500 mt-1">Target age {retirementAge}</p>
+          <p className="text-base text-zinc-500 mt-1">Target age {retirementAge}</p>
         </div>
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-          <p className="text-sm font-semibold text-zinc-400">Total Income Required</p>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+          <p className="text-base font-semibold text-zinc-400">Total Income Required</p>
           <p className="text-2xl font-bold text-zinc-100 mt-1">{formatCurrency(retirement.totalIncomeRequired)}</p>
-          <p className="text-sm text-zinc-500 mt-1">Over {Math.max(0, lifeExpectancy - retirementAge)} yrs of retirement</p>
+          <p className="text-base text-zinc-500 mt-1">Over {Math.max(0, lifeExpectancy - retirementAge)} yrs of retirement</p>
         </div>
-        <div className={`rounded-xl border ${retirement.lifetimePosition >= 0 ? "border-green-600/30" : "border-red-600/30"} bg-zinc-900 p-5`}>
-          <p className="text-sm font-semibold text-zinc-400">Lifetime {retirement.lifetimePosition >= 0 ? "Surplus" : "Shortfall"}</p>
+        <div className={`rounded-2xl border ${retirement.lifetimePosition >= 0 ? "border-green-600/30" : "border-red-600/30"} bg-zinc-900 p-6`}>
+          <p className="text-base font-semibold text-zinc-400">Lifetime {retirement.lifetimePosition >= 0 ? "Surplus" : "Shortfall"}</p>
           <p className={`text-2xl font-bold mt-1 ${retirement.lifetimePosition >= 0 ? "text-green-400" : "text-red-400"}`}>
             {formatCurrency(Math.abs(retirement.lifetimePosition))}
           </p>
-          <p className="text-sm text-zinc-500 mt-1">Total over retirement</p>
+          <p className="text-base text-zinc-500 mt-1">Total over retirement</p>
         </div>
       </div>
 
-      <p className="text-xs text-zinc-600 text-center">
+      <p className="text-sm text-zinc-600 text-center">
         Projections assume {growthRate}% annual growth and {yieldRate}% yield. For illustration only.
       </p>
     </div>
@@ -355,9 +355,9 @@ function HowWeHelp() {
   return (
     <div className="space-y-5">
       <div className="text-center mb-4">
-        <p className="text-sm font-semibold text-zinc-400 mb-1">Why Quantum</p>
-        <h2 className="text-xl font-bold text-zinc-100">How We Help You</h2>
-        <p className="text-sm text-zinc-500 mt-2 max-w-lg mx-auto">
+        <p className="text-base font-semibold text-zinc-400 mb-1">Why Quantum</p>
+        <h2 className="text-2xl font-bold text-zinc-100">How We Help You</h2>
+        <p className="text-base text-zinc-500 mt-2 max-w-lg mx-auto">
           Access financial freedom through property. Here's what working with Quantum looks like.
         </p>
       </div>
@@ -365,11 +365,11 @@ function HowWeHelp() {
         {services.map((s) => (
           <div
             key={s.title}
-            className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 hover:border-yellow-600/40 transition-colors"
+            className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 hover:border-yellow-600/40 transition-colors"
           >
-            <div className="w-1.5 h-5 bg-yellow-600 rounded-full mb-3" />
-            <h3 className="text-sm font-semibold text-zinc-100 mb-2">{s.title}</h3>
-            <p className="text-sm text-zinc-400 leading-relaxed">{s.description}</p>
+            <div className="w-1.5 h-6 bg-yellow-600 rounded-full mb-4" />
+            <h3 className="text-lg font-semibold text-zinc-100 mb-2">{s.title}</h3>
+            <p className="text-base text-zinc-400 leading-relaxed">{s.description}</p>
           </div>
         ))}
       </div>
@@ -384,33 +384,33 @@ function NextStep({ state, setState }: ConsultTabProps) {
   return (
     <div className="space-y-5">
       <div className="text-center mb-4">
-        <p className="text-sm font-semibold text-zinc-400 mb-1">What Happens Now</p>
-        <h2 className="text-xl font-bold text-zinc-100">Next Step</h2>
+        <p className="text-base font-semibold text-zinc-400 mb-1">What Happens Now</p>
+        <h2 className="text-2xl font-bold text-zinc-100">Next Step</h2>
       </div>
 
-      <div className="rounded-xl border border-yellow-600/30 bg-zinc-900 p-6 text-center space-y-4">
-        <p className="text-sm text-zinc-300 leading-relaxed max-w-lg mx-auto">
+      <div className="rounded-2xl border border-yellow-600/30 bg-zinc-900 p-8 text-center space-y-5">
+        <p className="text-base text-zinc-300 leading-relaxed max-w-lg mx-auto">
           If this makes sense and you're ready to move forward, the next step is to engage Quantum as
           your buyer's agent. We'll lock in your strategy, define your buying criteria, and begin the
           search.
         </p>
-        <div className="inline-flex items-center gap-2 bg-yellow-600/20 border border-yellow-600/40 rounded-lg px-4 py-2">
-          <span className="text-sm font-semibold text-yellow-400">
+        <div className="inline-flex items-center gap-2 bg-yellow-600/20 border border-yellow-600/40 rounded-xl px-5 py-3">
+          <span className="text-base font-semibold text-yellow-400">
             Access Financial Freedom Through Property
           </span>
         </div>
       </div>
 
       <SectionCard title="Consult Decision" subtitle="Document the outcome of this consult">
-        <div className="space-y-3">
+        <div className="space-y-5">
           <div>
-            <label className="text-sm font-semibold text-zinc-300 block mb-1.5">
+            <label className="text-base font-semibold text-zinc-300 block mb-2">
               Outcome
             </label>
             <select
               value={state.consultDecisionOutcome}
               onChange={(e) => set("consultDecisionOutcome", e.target.value)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-yellow-600"
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-4 text-lg text-zinc-100 focus:outline-none focus:border-yellow-600"
             >
               <option value="">Select outcome...</option>
               <option value="engaged">Client Engaged ✓</option>
@@ -420,15 +420,15 @@ function NextStep({ state, setState }: ConsultTabProps) {
             </select>
           </div>
           <div>
-            <label className="text-sm font-semibold text-zinc-300 block mb-1.5">
+            <label className="text-base font-semibold text-zinc-300 block mb-2">
               Notes
             </label>
             <textarea
               value={state.consultNotes}
               onChange={(e) => set("consultNotes", e.target.value)}
-              rows={3}
+              rows={5}
               placeholder="Key points from the consult, agreed next steps, follow up date..."
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-yellow-600 resize-none"
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-4 text-lg text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-yellow-600 resize-none"
             />
           </div>
         </div>

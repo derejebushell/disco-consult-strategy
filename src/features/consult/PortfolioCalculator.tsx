@@ -220,7 +220,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
 
           {/* Person One */}
           <div>
-            <p className="text-sm font-bold text-zinc-300 mb-3">
+            <p className="text-base font-bold text-zinc-300 mb-3">
               {calc.householdType === "couple" ? "Person One" : "Your Details"}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -242,7 +242,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
           {/* Person Two */}
           {calc.householdType === "couple" && (
             <div>
-              <p className="text-sm font-bold text-zinc-300 mb-3">Person Two</p>
+              <p className="text-base font-bold text-zinc-300 mb-3">Person Two</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <Field label="Name">
                   <Input value={calc.personTwoName} onChange={(e) => setCalc("personTwoName", e.target.value)} placeholder="John" />
@@ -266,7 +266,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
       <SectionCard title="Property Portfolio">
         <div className="space-y-4">
           {properties.length === 0 && (
-            <p className="text-sm text-zinc-600 text-center py-4">No properties added yet.</p>
+            <p className="text-base text-zinc-600 text-center py-6">No properties added yet.</p>
           )}
           {properties.map((prop, idx) => {
             const val = parseMoney(prop.estimatedValue);
@@ -283,11 +283,11 @@ export function PortfolioCalculator({ state, setState }: Props) {
             const annualCashFlow = calculateAnnualCashFlow(prop);
 
             return (
-              <div key={prop.id} className="rounded-lg border border-zinc-700 bg-zinc-800/40 p-4 space-y-4">
+              <div key={prop.id} className="rounded-xl border border-zinc-700 bg-zinc-800/40 p-6 space-y-5">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-yellow-500">Property {idx + 1}</span>
-                    {prop.suburb && <span className="text-xs text-zinc-400">— {prop.suburb}</span>}
+                  <div className="flex items-center gap-3">
+                    <span className="text-base font-bold text-yellow-500">Property {idx + 1}</span>
+                    {prop.suburb && <span className="text-base text-zinc-400">— {prop.suburb}</span>}
                   </div>
                   <button
                     onClick={() => removeProperty(idx)}
@@ -297,7 +297,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   <Field label="Suburb / Identifier">
                     <Input value={prop.suburb} onChange={(e) => setProperty(idx, "suburb", e.target.value)} placeholder="Newstead, QLD" />
                   </Field>
@@ -354,26 +354,26 @@ export function PortfolioCalculator({ state, setState }: Props) {
 
                 {/* Per-property summary */}
                 {val > 0 && (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-zinc-700">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-zinc-700">
                     <div className="text-center">
-                      <p className="text-sm text-zinc-400">Equity</p>
-                      <p className="text-base font-bold text-yellow-400">{formatCurrencyShort(equity)}</p>
+                      <p className="text-base text-zinc-400">Equity</p>
+                      <p className="text-lg font-bold text-yellow-400">{formatCurrencyShort(equity)}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-sm text-zinc-400">Usable Equity</p>
-                      <p className="text-base font-bold text-yellow-300">{formatCurrencyShort(usableEquity)}</p>
+                      <p className="text-base text-zinc-400">Usable Equity</p>
+                      <p className="text-lg font-bold text-yellow-300">{formatCurrencyShort(usableEquity)}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-sm text-zinc-400">
+                      <p className="text-base text-zinc-400">
                         {prop.ownershipType === "investment" ? "Annual Cash Flow" : "Not Applicable"}
                       </p>
-                      <p className={`text-sm font-semibold ${annualCashFlow >= 0 ? "text-green-400" : "text-red-400"}`}>
+                      <p className={`text-base font-semibold ${annualCashFlow >= 0 ? "text-green-400" : "text-red-400"}`}>
                         {prop.ownershipType === "investment" ? formatCurrencyShort(annualCashFlow) : "—"}
                       </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-sm text-zinc-400">Payoff</p>
-                      <p className="text-sm font-semibold text-zinc-300">
+                      <p className="text-base text-zinc-400">Payoff</p>
+                      <p className="text-base font-semibold text-zinc-300">
                         {payoff.status === "ok" && payoff.years !== null
                           ? `${Math.round(payoff.years)} yrs`
                           : payoff.status}
@@ -387,9 +387,9 @@ export function PortfolioCalculator({ state, setState }: Props) {
 
           <button
             onClick={addProperty}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border border-dashed border-zinc-700 text-sm text-zinc-500 hover:text-yellow-500 hover:border-yellow-600/50 transition-all"
+            className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border border-dashed border-zinc-700 text-base text-zinc-500 hover:text-yellow-500 hover:border-yellow-600/50 transition-all"
           >
-            <Plus size={14} />
+            <Plus size={18} />
             Add Property
           </button>
         </div>
@@ -449,7 +449,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
       <div>
         <div className="flex items-center gap-2 mb-4">
           <div className="h-px flex-1 bg-zinc-800" />
-          <span className="text-xs text-zinc-500 font-medium uppercase tracking-widest">Results</span>
+          <span className="text-sm text-zinc-500 font-medium uppercase tracking-widest">Results</span>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -589,7 +589,7 @@ export function PortfolioCalculator({ state, setState }: Props) {
       </div>
 
       {/* Disclaimer */}
-      <p className="text-xs text-zinc-600 leading-relaxed text-center pt-2">
+      <p className="text-sm text-zinc-600 leading-relaxed text-center pt-2">
         Projections are estimates only. Results depend on market conditions and individual circumstances. Borrowing capacity must be confirmed by a licensed broker. Tax implications should be discussed with your accountant. Property performance is not guaranteed.
       </p>
     </div>
