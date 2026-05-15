@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Property Investment Analyser</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/recharts@2.8.0/umd/Recharts.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a2a4a;font-size:13px}
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{background:#1a2a4a;color:white;height:52px;display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;z-index:100}
+.topbar-logo{font-weight:800;font-size:16px;color:white;display:flex;flex-direction:column;line-height:1.1}
+.topbar-logo span{font-size:9px;font-weight:400;opacity:.7;letter-spacing:1px}
+.topbar-search{flex:1;max-width:420px;margin:0 auto}
+.topbar-search input{width:100%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 16px;color:white;font-size:12px;outline:none}
+.topbar-search input::placeholder{color:rgba(255,255,255,.5)}
+.body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:210px;background:white;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-nav{flex:1;padding:8px 0}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:#4b5563;cursor:pointer;font-size:13px;border-left:3px solid transparent;transition:all .15s}
+.sidebar-item:hover{background:#f9fafb;color:#1a2a4a}
+.sidebar-item.active{background:#f0f4ff;color:#1a2a4a;font-weight:600;border-left-color:#c0392b}
+.sidebar-footer{padding:12px 16px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.tool-header{background:white;border-bottom:1px solid #e5e7eb;padding:0 16px;display:flex;align-items:center;flex-shrink:0}
+.tool-title{padding:10px 0;margin-right:20px}
+.tool-title h2{font-size:13px;font-weight:700;color:#1a2a4a}
+.tool-title p{font-size:11px;color:#9ca3af}
+.tab-nav{display:flex;flex:1}
+.tab-btn{padding:14px 16px;font-size:12px;font-weight:500;color:#6b7280;border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap}
+.tab-btn:hover{color:#1a2a4a}
+.tab-btn.active{color:#1a2a4a;font-weight:700;border-bottom-color:#c0392b}
+.toolbar{display:flex;gap:4px;margin-left:auto;align-items:center}
+.toolbar-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid #d1d5db;border-radius:5px;background:white;font-size:11px;color:#374151;cursor:pointer;font-weight:500;transition:all .15s}
+.toolbar-btn:hover{background:#f9fafb;border-color:#9ca3af}
+.content{flex:1;overflow:hidden;display:flex}
+.property-bar{background:white;border-bottom:1px solid #e5e7eb;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;font-size:12px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.property-tag{background:#1a2a4a;color:white;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;text-transform:none;letter-spacing:0}
+.new-link{margin-left:auto;color:#c0392b;font-size:12px;cursor:pointer;font-weight:600}
+.analysis-wrap{display:flex;flex:1;overflow:hidden}
+.input-panel{width:310px;background:white;border-right:1px solid #e5e7eb;overflow-y:auto;flex-shrink:0}
+.results-panel{flex:1;overflow-y:auto;background:#f0f2f5;padding:12px}
+.input-header{background:linear-gradient(135deg,#1a2a4a 0%,#2d3f6b 100%);color:white;padding:10px 14px;font-size:12px;font-weight:700}
+.input-header-sub{font-size:10px;font-weight:400;opacity:.7;margin-top:1px}
+.section-header{padding:8px 14px 4px;font-size:10px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;border-left:3px solid #c0392b;margin-top:4px}
+.field-row{padding:5px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.field-label{font-size:12px;color:#374151;flex:1;line-height:1.3}
+.field-hint{font-size:10px;color:#9ca3af;margin-top:1px}
+.field-input{display:flex;align-items:center;gap:3px}
+.field-input input{border:1px solid #d1d5db;border-radius:5px;padding:4px 7px;font-size:12px;width:90px;text-align:right;outline:none;color:#1a2a4a}
+.field-input input:focus{border-color:#1a2a4a}
+.field-input .unit{font-size:11px;color:#9ca3af;min-width:18px}
+.field-select{border:1px solid #d1d5db;border-radius:5px;padding:4px 7px;font-size:12px;outline:none;color:#1a2a4a;background:white;cursor:pointer}
+.field-select:focus{border-color:#1a2a4a}
+.toggle-group{padding:6px 14px;display:flex;flex-wrap:wrap;gap:5px}
+.toggle-btn{padding:4px 10px;border-radius:16px;border:1px solid #d1d5db;background:white;font-size:11px;font-weight:500;cursor:pointer;color:#4b5563;transition:all .15s}
+.toggle-btn.active{background:#1a2a4a;color:white;border-color:#1a2a4a}
+.switch-row{padding:6px 14px;display:flex;align-items:center;gap:8px}
+.switch{position:relative;width:34px;height:18px}
+.switch input{opacity:0;width:0;height:0}
+.switch-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#d1d5db;border-radius:18px;transition:.2s}
+.switch-slider::before{content:'';position:absolute;height:14px;width:14px;left:2px;bottom:2px;background:white;border-radius:50%;transition:.2s}
+.switch input:checked+.switch-slider{background:#1a2a4a}
+.switch input:checked+.switch-slider::before{transform:translateX(16px)}
+.switch-label{font-size:12px;color:#374151}
+.badge{background:#10b981;color:white;font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700}
+.loan-tabs{display:flex;margin:6px 14px 0;border-bottom:1px solid #e5e7eb}
+.loan-tab{flex:1;padding:6px 8px;text-align:center;font-size:11px;font-weight:500;cursor:pointer;color:#6b7280;border-bottom:2px solid transparent;transition:all .15s}
+.loan-tab.active{color:#1a2a4a;font-weight:700;border-bottom-color:#1a2a4a;background:#f0f4ff}
+.loan-summary{margin:4px 14px;background:#f9fafb;border-radius:5px;padding:6px 10px;font-size:11px;color:#374151}
+.loan-summary strong{color:#1a2a4a}
+.investor-table{margin:4px 14px}
+.investor-row{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.investor-row input{border:1px solid #d1d5db;border-radius:4px;padding:4px 6px;font-size:11px;outline:none}
+.investor-row input.name{flex:1}
+.investor-row input.income{width:70px;text-align:right}
+.investor-row input.pct{width:45px;text-align:right}
+.investor-ownership-ok{font-size:10px;color:#10b981;font-weight:700;margin:2px 14px}
+.investor-ownership-warn{font-size:10px;color:#ef4444;font-weight:700;margin:2px 14px}
+.add-investor-btn{margin:4px 14px;padding:5px;border:1px dashed #d1d5db;border-radius:5px;background:none;font-size:11px;color:#6b7280;cursor:pointer;width:calc(100% - 28px);transition:all .15s}
+.add-investor-btn:hover{background:#f9fafb}
+.remove-investor-btn{background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+.slider-row{padding:4px 14px}
+.slider-label{display:flex;justify-content:space-between;font-size:12px;color:#374151;margin-bottom:4px}
+.slider-val{font-weight:700;color:#c0392b}
+input[type=range]{width:100%;accent-color:#1a2a4a;height:4px;cursor:pointer}
+.proj-group{padding:4px 14px;display:flex;gap:5px;flex-wrap:wrap}
+.proj-btn{padding:4px 10px;border-radius:16px;border:1px solid #d1d5db;background:white;font-size:11px;cursor:pointer;color:#4b5563;transition:all .15s}
+.proj-btn.active{background:#1a2a4a;color:white;border-color:#1a2a4a}
+.action-row{padding:10px 14px;display:flex;gap:8px}
+.btn-primary{flex:1;background:#1a2a4a;color:white;border:none;border-radius:6px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-primary:hover{background:#243b66}
+.btn-secondary{flex:1;background:white;color:#1a2a4a;border:1px solid #d1d5db;border-radius:6px;padding:9px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-secondary:hover{background:#f9fafb}
+.stamp-note{margin:2px 14px;font-size:10px;color:#10b981;font-weight:600}
+.hero-banner{background:linear-gradient(135deg,#1a2a4a 0%,#c0392b 100%);border-radius:10px;padding:16px 20px;color:white;display:flex;align-items:center;margin-bottom:10px}
+.hero-irr{flex:1}
+.hero-irr-label{font-size:10px;opacity:.8;text-transform:uppercase;letter-spacing:.5px}
+.hero-irr-value{font-size:44px;font-weight:900;line-height:1;letter-spacing:-2px}
+.hero-irr-sub{font-size:10px;opacity:.7;margin-top:2px}
+.hero-stats{display:flex;gap:20px}
+.hero-stat{text-align:right}
+.hero-stat-label{font-size:9px;opacity:.7;text-transform:uppercase;letter-spacing:.5px}
+.hero-stat-value{font-size:18px;font-weight:800;line-height:1.2}
+.hero-stat-sub{font-size:9px;opacity:.6}
+.metric-cards{display:flex;gap:8px;margin-bottom:10px}
+.metric-card{flex:1;background:white;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.metric-card-top{height:4px}
+.metric-card-top.yellow{background:#f59e0b}
+.metric-card-top.green{background:#10b981}
+.metric-card-top.red{background:#ef4444}
+.metric-card-top.orange{background:#f97316}
+.metric-card-top.blue{background:#3b82f6}
+.metric-card-body{padding:8px 10px}
+.metric-card-label{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;font-weight:700}
+.metric-card-value{font-size:18px;font-weight:800;color:#1a2a4a;line-height:1.2;margin:2px 0}
+.metric-card-value.neg{color:#ef4444}
+.metric-card-sub{font-size:10px;color:#9ca3af}
+.table-card{background:white;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:10px;overflow:hidden}
+.table-card-header{padding:10px 14px;border-bottom:1px solid #f3f4f6}
+.table-card-header h3{font-size:13px;font-weight:700;color:#1a2a4a}
+.table-card-header p{font-size:11px;color:#9ca3af}
+.cf-table{width:100%;border-collapse:collapse;font-size:11px}
+.cf-table thead th{background:#1a2a4a;color:white;padding:7px 10px;text-align:right;font-weight:600;font-size:11px}
+.cf-table thead th:first-child{text-align:left}
+.cf-table tbody td{padding:5px 10px;text-align:right;border-bottom:1px solid #f9fafb}
+.cf-table tbody td:first-child{text-align:left;color:#374151}
+.cf-table .group-header td{background:#f1f5f9;font-size:9px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;padding:5px 10px;border-left:3px solid #c0392b}
+.cf-table .bold-row td{font-weight:700;color:#1a2a4a;background:#fafafa}
+.cf-table .neg{color:#ef4444;font-weight:600}
+.cf-table .pos{color:#10b981;font-weight:600}
+.cf-table .sub-row td:first-child{padding-left:22px;color:#6b7280}
+.charts-row{display:flex;gap:10px;margin-bottom:10px}
+.chart-card{flex:1;background:white;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.07);padding:12px}
+.chart-card h4{font-size:12px;font-weight:700;color:#1a2a4a;margin-bottom:10px}
+.portfolio-wrap{flex:1;overflow-y:auto;padding:20px}
+.portfolio-summary{display:flex;gap:12px;margin-bottom:20px}
+.port-kpi{flex:1;background:white;border-radius:8px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.port-kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;font-weight:700}
+.port-kpi-value{font-size:22px;font-weight:800;color:#1a2a4a;margin:4px 0 2px}
+.port-kpi-sub{font-size:11px;color:#9ca3af}
+.property-cards{display:flex;gap:12px;flex-wrap:wrap}
+.property-card{width:260px;background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.07);overflow:hidden;border-top:4px solid #1a2a4a}
+.property-card-body{padding:12px}
+.property-card-addr{font-size:13px;font-weight:700;color:#1a2a4a;line-height:1.3}
+.property-card-state{font-size:11px;color:#9ca3af;margin-top:1px}
+.property-card-badge{display:inline-block;background:#fee2e2;color:#c0392b;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;margin-top:6px}
+.property-card-stats{display:flex;gap:0;margin:10px 0}
+.prop-stat{flex:1}
+.prop-stat-val{font-size:13px;font-weight:800;color:#1a2a4a}
+.prop-stat-label{font-size:9px;text-transform:uppercase;color:#9ca3af;font-weight:700;letter-spacing:.4px}
+.property-card-actions{display:flex;gap:6px;padding:8px 12px;border-top:1px solid #f3f4f6}
+.btn-view{flex:1;background:#1a2a4a;color:white;border:none;border-radius:5px;padding:6px;font-size:11px;font-weight:600;cursor:pointer}
+.btn-remove{padding:6px 10px;border:1px solid #fca5a5;color:#ef4444;background:white;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer}
+.add-property-card{width:260px;background:white;border-radius:10px;border:2px dashed #d1d5db;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:30px;cursor:pointer;transition:all .15s;min-height:180px}
+.add-property-card:hover{border-color:#1a2a4a;background:#f9fafb}
+.add-property-plus{font-size:28px;color:#d1d5db}
+.add-property-label{font-size:12px;font-weight:600;color:#6b7280}
+.add-property-sub{font-size:11px;color:#9ca3af;text-align:center}
+.scenarios-wrap{flex:1;overflow-y:auto;padding:20px}
+.scenario-section{margin-bottom:24px}
+.scenario-section h3{font-size:16px;font-weight:800;color:#1a2a4a;margin-bottom:4px}
+.scenario-section p{font-size:12px;color:#9ca3af;margin-bottom:12px}
+.scenario-assumptions{background:#1a2a4a;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.scenario-assumptions h4{color:white;font-size:11px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.assumption-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+.assumption-field label{font-size:10px;color:rgba(255,255,255,.7);display:block;margin-bottom:4px}
+.assumption-field input{width:100%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:5px 8px;color:white;font-size:13px;font-weight:700;outline:none;text-align:right}
+.scenario-compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.scenario-col{border-radius:8px;padding:16px;text-align:center}
+.scenario-col.base{background:#f1f5f9}
+.scenario-col.bull{background:#d1fae5}
+.scenario-col.bear{background:#fee2e2}
+.scenario-col-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.scenario-col.base .scenario-col-label{color:#1a2a4a}
+.scenario-col.bull .scenario-col-label{color:#059669}
+.scenario-col.bear .scenario-col-label{color:#c0392b}
+.scenario-col-irr{font-size:32px;font-weight:900;margin:4px 0}
+.scenario-col.base .scenario-col-irr{color:#1a2a4a}
+.scenario-col.bull .scenario-col-irr{color:#059669}
+.scenario-col.bear .scenario-col-irr{color:#c0392b}
+.scenario-col-stat{font-size:11px;margin-top:2px}
+.scenario-col.base .scenario-col-stat{color:#4b5563}
+.scenario-col.bull .scenario-col-stat{color:#065f46}
+.scenario-col.bear .scenario-col-stat{color:#991b1b}
+.scenario-table{width:100%;border-collapse:collapse;font-size:12px;background:white;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.scenario-table th{background:#1a2a4a;color:white;padding:8px 12px;text-align:right;font-size:11px}
+.scenario-table th:first-child{text-align:left}
+.scenario-table td{padding:7px 12px;text-align:right;border-bottom:1px solid #f3f4f6}
+.scenario-table td:first-child{text-align:left;font-weight:600;color:#374151}
+.scenario-table tr:last-child td{border-bottom:none}
+.cgt-section h3{font-size:16px;font-weight:800;color:#1a2a4a;margin-bottom:4px}
+.cgt-section p{font-size:12px;color:#9ca3af;margin-bottom:12px}
+.cgt-summary-banner{background:linear-gradient(135deg,#1a2a4a,#2d3f6b);border-radius:10px;padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.cgt-banner-col h4{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.6);margin-bottom:8px}
+.cgt-banner-stat{margin-bottom:4px}
+.cgt-banner-stat-label{font-size:10px;color:rgba(255,255,255,.6)}
+.cgt-banner-stat-value{font-size:15px;font-weight:700;color:white}
+.cgt-banner-stat-value.highlight{font-size:20px;color:#4ade80}
+.cgt-banner-stat-value.red{color:#f87171}
+.cgt-property-card{background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.07);overflow:hidden;margin-bottom:16px}
+.cgt-property-header{background:linear-gradient(135deg,#1a2a4a,#c0392b);color:white;padding:10px 16px;font-size:12px;font-weight:700}
+.cgt-property-body{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cgt-input-group h5{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;margin-bottom:8px}
+.cgt-field{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.cgt-field label{font-size:12px;color:#374151}
+.cgt-field input{border:1px solid #d1d5db;border-radius:5px;padding:4px 8px;font-size:12px;width:110px;text-align:right;outline:none}
+.cgt-results-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px}
+.cgt-result-box{border-radius:8px;padding:12px}
+.cgt-result-box.proceeds{background:#f0f9ff;border:1px solid #bae6fd}
+.cgt-result-box.gains{background:#f0fdf4;border:1px solid #bbf7d0}
+.cgt-result-box.outcome{background:#fff7ed;border:1px solid #fed7aa}
+.cgt-result-box h5{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.cgt-result-box.proceeds h5{color:#0284c7}
+.cgt-result-box.gains h5{color:#16a34a}
+.cgt-result-box.outcome h5{color:#ea580c}
+.cgt-line{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.cgt-line label{color:#4b5563}
+.cgt-line span{font-weight:600;color:#1a2a4a}
+.cgt-line span.neg{color:#ef4444}
+.cgt-line span.pos{color:#10b981}
+.cgt-line.total{border-top:1px solid rgba(0,0,0,.1);margin-top:6px;padding-top:6px}
+.cgt-line.total label,.cgt-line.total span{font-weight:800;font-size:12px}
+.report-wrap{flex:1;overflow-y:auto;padding:20px}
+.report-selector{background:white;border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.report-selector h3{font-size:14px;font-weight:700;color:#1a2a4a}
+.report-selector-right{display:flex;gap:8px;align-items:center}
+.report-badge{background:#1a2a4a;color:white;font-size:10px;padding:3px 8px;border-radius:4px;font-weight:700}
+.report-content{background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.07);overflow:hidden}
+.report-cover{background:linear-gradient(135deg,#1a2a4a 0%,#c0392b 100%);padding:32px;color:white}
+.report-cover h1{font-size:28px;font-weight:900;margin-bottom:4px}
+.report-cover p{font-size:14px;opacity:.8}
+.report-cover-stats{display:flex;gap:24px;margin-top:20px}
+.report-cover-stat-label{font-size:10px;opacity:.7;text-transform:uppercase}
+.report-cover-stat-value{font-size:22px;font-weight:800}
+.report-body{padding:24px}
+.report-section{margin-bottom:24px}
+.report-section h3{font-size:14px;font-weight:800;color:#1a2a4a;border-bottom:2px solid #c0392b;padding-bottom:6px;margin-bottom:12px}
+.report-two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.report-stat-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f3f4f6;font-size:12px}
+.report-stat-row label{color:#4b5563}
+.report-stat-row span{font-weight:700;color:#1a2a4a}
+.run-btn{background:#c0392b;color:white;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.run-btn:hover{background:#a93226}
+.text-red{color:#ef4444}
+.text-green{color:#10b981}
+.font-bold{font-weight:700}
+.divider{height:1px;background:#f3f4f6;margin:4px 0}
+@media print{.sidebar,.topbar,.input-panel,.tool-header{display:none!important}.results-panel{padding:0!important}.report-wrap{padding:0!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo, useCallback } = React;
+const { AreaChart, Area, BarChart, Bar, ComposedChart, XAxis, YAxis,
+        CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } = Recharts;
+
+/* ─── UTILITIES ─────────────────────────────────────────────────── */
+const fmt  = n => (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)).toLocaleString();
+const fmtK = n => (n < 0 ? '-$' : '$') + Math.abs(Math.round(n / 1000)).toLocaleString() + 'k';
+const fmtPct = n => (n * 100).toFixed(1) + '%';
+const num  = v => parseFloat(v) || 0;
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+/* ─── STAMP DUTY ─────────────────────────────────────────────────── */
+function calcStampDuty(price, state) {
+  const p = Math.round(price);
+  const tbl = {
+    NSW:[[15000,0,.0125],[32000,187,.015],[87000,442,.0175],[327000,1405,.035],[1089000,9805,.045],[3268000,44095,.055],[Infinity,163940,.07]],
+    VIC: p > 960000 ? [[Infinity,0,.055]] : [[25000,0,.014],[130000,350,.024],[960000,2870,.06],[Infinity,50600,.055]],
+    QLD:[[5000,0,0],[75000,0,.015],[540000,1050,.035],[1000000,17325,.045],[Infinity,38025,.0575]],
+    SA:[[12000,0,.01],[30000,120,.02],[50000,480,.03],[100000,1080,.035],[200000,2830,.04],[250000,6830,.0425],[300000,8955,.0475],[500000,11330,.05],[Infinity,21330,.055]],
+    WA:[[80000,0,.019],[100000,1520,.0285],[250000,2090,.03],[500000,6590,.0415],[Infinity,16965,.05]],
+    ACT:[[200000,0,.02],[300000,4000,.038],[500000,7800,.055],[750000,18800,.058],[1000000,33300,.066],[Infinity,49800,.07]],
+    TAS:[[25000,50,.0175],[75000,435,.025],[200000,1685,.03],[375000,5435,.035],[725000,11560,.04],[Infinity,25560,.045]],
+    NT:[[525000,0,.04],[Infinity,21000,.05]],
+  };
+  const rows = tbl[state] || tbl.NSW;
+  let prev = 0;
+  for (const [lim, base, rate] of rows) {
+    if (p <= lim) return Math.round(base + (p - prev) * rate);
+    prev = lim;
+  }
+  return 0;
+}
+
+/* ─── LOAN HELPERS ───────────────────────────────────────────────── */
+function monthlyPmt(P, annRate, termYrs) {
+  if (P <= 0) return 0;
+  const r = annRate / 100 / 12, n = termYrs * 12;
+  if (r === 0) return P / n;
+  return P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+}
+function loanBal(P, annRate, termYrs, months) {
+  if (P <= 0) return 0;
+  const r = annRate / 100 / 12;
+  if (r === 0) return Math.max(0, P * (1 - months / (termYrs * 12)));
+  const pmt = monthlyPmt(P, annRate, termYrs);
+  return Math.max(0, P * Math.pow(1 + r, months) - pmt * (Math.pow(1 + r, months) - 1) / r);
+}
+function yearlyLoan(P, annRate, termYrs, year, loanType, ioPeriod) {
+  if (P <= 0) return { interest: 0, principal: 0, balance: 0, repayment: 0 };
+  const r = annRate / 100 / 12;
+  const io = num(ioPeriod);
+
+  if (loanType === 'IO' && year <= io) {
+    const interest = P * annRate / 100;
+    return { interest: Math.round(interest), principal: 0, balance: P, repayment: Math.round(interest) };
+  }
+
+  let effP = P, effTerm = termYrs, effYear = year;
+  if (loanType === 'IO') { effTerm = termYrs - io; effYear = year - io; }
+
+  const startBal = loanBal(effP, annRate, effTerm, (effYear - 1) * 12);
+  const endBal   = loanBal(effP, annRate, effTerm, effYear * 12);
+  const pmt = monthlyPmt(effP, annRate, effTerm);
+
+  let interest = 0, bal = startBal;
+  for (let m = 0; m < 12; m++) {
+    const mi = bal * r;
+    interest += mi;
+    bal = Math.max(0, bal - (pmt - mi));
+  }
+  const principal = Math.max(0, startBal - endBal);
+  return { interest: Math.round(interest), principal: Math.round(principal), balance: Math.round(endBal), repayment: Math.round(pmt * 12) };
+}
+
+/* ─── TAX ────────────────────────────────────────────────────────── */
+function marginalRate(income) {
+  if (income <= 18200) return .02;
+  if (income <= 45000) return .19 + .02;
+  if (income <= 120000) return .325 + .02;
+  if (income <= 180000) return .37 + .02;
+  return .45 + .02;
+}
+
+/* ─── IRR ────────────────────────────────────────────────────────── */
+function calcIRR(flows) {
+  if (!flows || flows.length < 2) return 0;
+  for (const guess of [.1, .05, .15, .2, .25, -.05]) {
+    let r = guess, ok = false;
+    for (let i = 0; i < 200; i++) {
+      let npv = 0, d = 0;
+      for (let t = 0; t < flows.length; t++) {
+        const pv = Math.pow(1 + r, t);
+        npv += flows[t] / pv;
+        d   -= t * flows[t] / (pv * (1 + r));
+      }
+      if (Math.abs(d) < 1e-12) break;
+      const nr = r - npv / d;
+      if (Math.abs(nr - r) < 1e-8) { r = nr; ok = true; break; }
+      r = clamp(nr, -.99, 5);
+    }
+    if (ok && r > -.5 && r < 3) return r;
+  }
+  return 0;
+}
+
+/* ─── ANALYSIS ENGINE ────────────────────────────────────────────── */
+function computeAnalysis(inp) {
+  const pp    = num(inp.purchasePrice);
+  const loan  = num(inp.loanAmount);
+  const rate  = num(inp.interestRate);
+  const term  = num(inp.loanTerm) || 30;
+  const type  = inp.loanType || 'PI';
+  const ioPer = num(inp.ioPeriod);
+  const offset = num(inp.offsetBalance);
+  const wRent = num(inp.weeklyRent);
+  const vacRate = num(inp.vacancyRate) / 100;
+  const rentG = num(inp.rentGrowth) / 100;
+  const capG  = num(inp.capitalGrowth) / 100;
+  const expG  = num(inp.expenseGrowth) / 100;
+  const sellC = num(inp.sellingCosts) / 100;
+  const yrs   = num(inp.projectionYears) || 10;
+  const exitYr = Math.min(yrs, num(inp.exitYear) || yrs);
+  const bDepr = num(inp.buildingDepreciation);
+  const fDepr = num(inp.fittingsDepreciation);
+  const mgmtPct = num(inp.propertyManagement) / 100;
+  const state = inp.state || 'NSW';
+
+  const sd = inp.stampDutyOverride ? num(inp.stampDutyCustom) : calcStampDuty(pp, state);
+  const acqCosts = sd + num(inp.legalFees) + num(inp.buildingInspection) + num(inp.otherAcquisition);
+  const deposit  = Math.max(0, pp - loan);
+  const equity0  = deposit + acqCosts;
+  const lvr      = pp > 0 ? loan / pp * 100 : 0;
+  const effLoan  = Math.max(0, loan - offset);
+  const mPmt     = monthlyPmt(effLoan, rate, term);
+
+  const baseExp = num(inp.councilRates) + num(inp.waterRates) + num(inp.insurance) +
+                  num(inp.maintenance) + num(inp.strataLevies) + num(inp.landTax) + num(inp.otherExpenses);
+
+  const investors = (inp.investors || []).filter(i => num(i.ownership) > 0);
+  const combinedMR = investors.length
+    ? investors.reduce((s, i) => s + marginalRate(num(i.income)) * (num(i.ownership) / 100), 0)
+    : marginalRate(100000);
+
+  const rows = [];
+  const irrFlows = [-equity0];
+
+  for (let y = 1; y <= yrs; y++) {
+    const gf  = Math.pow(1 + rentG, y - 1);
+    const ef  = Math.pow(1 + expG,  y - 1);
+    const pvf = Math.pow(1 + capG,  y);
+
+    const grossRent  = wRent * 52 * gf;
+    const vacancy    = grossRent * vacRate;
+    const netRent    = grossRent - vacancy;
+    const mgmt       = grossRent * mgmtPct;
+    const opExp      = baseExp * ef + mgmt;
+    const ld         = yearlyLoan(effLoan, rate, term, y, type, ioPer);
+    const noi        = netRent - opExp;
+    const pretaxCF   = noi - ld.interest - ld.principal;
+    const depr       = bDepr + (y <= 10 ? fDepr : 0);
+    const taxIncome  = netRent - opExp - ld.interest - depr;
+    const taxBen     = -taxIncome * combinedMR;
+    const atCF       = pretaxCF + taxBen;
+    const propVal    = Math.round(pp * pvf);
+    const eq         = propVal - ld.balance;
+
+    rows.push({
+      year: y,
+      grossRent: Math.round(grossRent), vacancy: Math.round(vacancy), netRent: Math.round(netRent),
+      mgmt: Math.round(mgmt), opExp: Math.round(opExp), noi: Math.round(noi),
+      interest: ld.interest, principal: ld.principal, loanBal: ld.balance,
+      repayment: ld.repayment, pretaxCF: Math.round(pretaxCF),
+      taxIncome: Math.round(taxIncome), taxBen: Math.round(taxBen),
+      atCF: Math.round(atCF), propVal, equity: Math.round(eq), depr: Math.round(depr),
+    });
+    irrFlows.push(Math.round(atCF));
+  }
+
+  const exitRow    = rows[exitYr - 1];
+  const salePrice  = exitRow ? exitRow.propVal : pp;
+  const sellAmt    = Math.round(salePrice * sellC);
+  const netProc    = salePrice - sellAmt;
+  const loanAtExit = exitRow ? exitRow.loanBal : effLoan;
+  const grossEqProc = netProc - loanAtExit;
+  const costBase   = pp + acqCosts;
+  const capGain    = netProc - costBase;
+  const cgtDisc    = capGain > 0 ? capGain * 0.5 : 0;
+  const taxGain    = Math.max(0, capGain - cgtDisc);
+  const cgtLiab    = Math.round(taxGain * combinedMR);
+  const netCGT     = grossEqProc - cgtLiab;
+
+  const trimFlows = irrFlows.slice(0, exitYr + 1);
+  trimFlows[exitYr] = (trimFlows[exitYr] || 0) + netCGT;
+
+  const irr = calcIRR(trimFlows);
+
+  const totalAtCF  = rows.slice(0, exitYr).reduce((s, r) => s + r.atCF, 0);
+  const grossYield = pp > 0 ? (wRent * 52) / pp : 0;
+  const netYield   = pp > 0 ? ((wRent * 52 * (1 - vacRate)) - baseExp - (wRent * 52 * mgmtPct)) / pp : 0;
+  const coc        = equity0 > 0 ? (rows[0]?.atCF || 0) / equity0 : 0;
+  const eqMultiple = equity0 > 0 ? (netCGT + totalAtCF) / equity0 : 0;
+
+  return {
+    sd, acqCosts, deposit, equity0, lvr, mPmt, effLoan,
+    rows, exitYr, salePrice, sellAmt, netProc, loanAtExit,
+    grossEqProc, costBase, capGain, cgtDisc, taxGain, cgtLiab, netCGT,
+    irr, grossYield, netYield, coc, eqMultiple, totalAtCF, combinedMR,
+    pp, loan,
+  };
+}
+
+/* ─── DEFAULT DATA ───────────────────────────────────────────────── */
+const DEFAULTS = {
+  address:'47 Harbour View Drive', suburb:'Cronulla', state:'NSW', propertyType:'house',
+  purchasePrice:850000,
+  stampDutyOverride:false, stampDutyCustom:0,
+  legalFees:2000, buildingInspection:600, otherAcquisition:0,
+  weeklyRent:750, vacancyRate:3, rentGrowth:3.5,
+  councilRates:2000, waterRates:900, insurance:1800, propertyManagement:8.5,
+  maintenance:3000, strataLevies:0, landTax:0, otherExpenses:500, expenseGrowth:3,
+  loanType:'PI', loanAmount:680000, interestRate:6.5, loanTerm:30, ioPeriod:5, offsetBalance:0,
+  buildingDepreciation:5000, fittingsDepreciation:4000,
+  capitalGrowth:5, projectionYears:10, exitYear:10, sellingCosts:2.5,
+  investors:[
+    { name:'Investor 1', income:120000, ownership:50 },
+    { name:'Investor 2', income:85000,  ownership:50 },
+  ],
+};
+
+let _pid = 1;
+const newProp = () => ({ id: _pid++, inputs: { ...DEFAULTS } });
+
+/* ─── SMALL COMPONENTS ───────────────────────────────────────────── */
+function FieldRow({ label, hint, children }) {
+  return (
+    <div className="field-row">
+      <div className="field-label">{label}{hint && <div className="field-hint">{hint}</div>}</div>
+      <div className="field-input">{children}</div>
+    </div>
+  );
+}
+function NumInput({ value, onChange, width = 90 }) {
+  return (
+    <input
+      type="number"
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      style={{ width }}
+    />
+  );
+}
+
+/* ─── INPUT PANEL ────────────────────────────────────────────────── */
+function InputPanel({ inputs, onChange }) {
+  const set = (k, v) => onChange({ ...inputs, [k]: v });
+  const an = computeAnalysis(inputs);
+  const ownerSum = (inputs.investors || []).reduce((s, i) => s + num(i.ownership), 0);
+
+  const updateInvestor = (idx, field, val) => {
+    const invs = inputs.investors.map((inv, i) => i === idx ? { ...inv, [field]: val } : inv);
+    set('investors', invs);
+  };
+  const addInvestor = () => set('investors', [...(inputs.investors || []), { name: `Investor ${(inputs.investors || []).length + 1}`, income: 80000, ownership: 0 }]);
+  const removeInvestor = idx => set('investors', inputs.investors.filter((_, i) => i !== idx));
+
+  return (
+    <div className="input-panel">
+      <div className="input-header">
+        Property Investment Analyser
+        <div className="input-header-sub">Enter details below — results update instantly</div>
+      </div>
+
+      {/* PROPERTY */}
+      <div className="section-header">Property Details</div>
+      <div className="field-row">
+        <div className="field-label">Address</div>
+        <input style={{ border:'1px solid #d1d5db', borderRadius:5, padding:'4px 7px', fontSize:12, width:140, outline:'none' }}
+          value={inputs.address} onChange={e => set('address', e.target.value)} />
+      </div>
+      <div className="field-row">
+        <div className="field-label">State</div>
+        <select className="field-select" value={inputs.state} onChange={e => set('state', e.target.value)}>
+          {['NSW','VIC','QLD','SA','WA','ACT','TAS','NT'].map(s => <option key={s}>{s}</option>)}
+        </select>
+      </div>
+      <div className="field-row">
+        <div className="field-label">Property Type</div>
+        <select className="field-select" value={inputs.propertyType} onChange={e => set('propertyType', e.target.value)}>
+          <option value="house">House</option>
+          <option value="unit">Unit/Apt</option>
+          <option value="townhouse">Townhouse</option>
+          <option value="commercial">Commercial</option>
+        </select>
+      </div>
+      <FieldRow label="Purchase Price">
+        <span className="unit">$</span>
+        <NumInput value={inputs.purchasePrice} onChange={v => set('purchasePrice', v)} width={100} />
+      </FieldRow>
+
+      {/* ACQUISITION */}
+      <div className="section-header">Acquisition Costs</div>
+      <div className="field-row">
+        <div className="field-label">Stamp Duty<div className="field-hint">Auto-calculated for {inputs.state}</div></div>
+        <div style={{ textAlign:'right' }}>
+          <div style={{ fontWeight:700, fontSize:12, color:'#1a2a4a' }}>{fmt(an.sd)}</div>
+          <div style={{ fontSize:10, color:'#9ca3af' }}>estimated</div>
+        </div>
+      </div>
+      <div className="switch-row">
+        <label className="switch"><input type="checkbox" checked={inputs.stampDutyOverride} onChange={e => set('stampDutyOverride', e.target.checked)} /><span className="switch-slider" /></label>
+        <span className="switch-label">Override stamp duty</span>
+      </div>
+      {inputs.stampDutyOverride && (
+        <FieldRow label="Custom Stamp Duty"><span className="unit">$</span><NumInput value={inputs.stampDutyCustom} onChange={v => set('stampDutyCustom', v)} /></FieldRow>
+      )}
+      <FieldRow label="Legal / Conveyancing"><span className="unit">$</span><NumInput value={inputs.legalFees} onChange={v => set('legalFees', v)} /></FieldRow>
+      <FieldRow label="Building & Pest Inspection"><span className="unit">$</span><NumInput value={inputs.buildingInspection} onChange={v => set('buildingInspection', v)} /></FieldRow>
+      <FieldRow label="Other Acquisition Costs"><span className="unit">$</span><NumInput value={inputs.otherAcquisition} onChange={v => set('otherAcquisition', v)} /></FieldRow>
+      <div className="stamp-note">Total acquisition: {fmt(an.acqCosts)} &nbsp;·&nbsp; Total equity: {fmt(an.equity0)}</div>
+
+      {/* RENTAL */}
+      <div className="section-header">Rental Income</div>
+      <FieldRow label="Weekly Rent"><span className="unit">$</span><NumInput value={inputs.weeklyRent} onChange={v => set('weeklyRent', v)} /></FieldRow>
+      <FieldRow label="Gross Annual Rent"><div style={{ fontWeight:700, fontSize:12, color:'#1a2a4a' }}>{fmt(num(inputs.weeklyRent) * 52)}</div></FieldRow>
+      <FieldRow label="Gross Yield"><div style={{ fontWeight:700, fontSize:12, color:'#10b981' }}>{fmtPct(an.grossYield)}</div></FieldRow>
+      <FieldRow label="Vacancy Rate"><NumInput value={inputs.vacancyRate} onChange={v => set('vacancyRate', v)} width={60} /><span className="unit">%</span></FieldRow>
+      <FieldRow label="Annual Rent Growth"><NumInput value={inputs.rentGrowth} onChange={v => set('rentGrowth', v)} width={60} /><span className="unit">%</span></FieldRow>
+
+      {/* EXPENSES */}
+      <div className="section-header">Operating Expenses</div>
+      <FieldRow label="Council Rates"><span className="unit">$</span><NumInput value={inputs.councilRates} onChange={v => set('councilRates', v)} /></FieldRow>
+      <FieldRow label="Water Rates"><span className="unit">$</span><NumInput value={inputs.waterRates} onChange={v => set('waterRates', v)} /></FieldRow>
+      <FieldRow label="Landlord Insurance"><span className="unit">$</span><NumInput value={inputs.insurance} onChange={v => set('insurance', v)} /></FieldRow>
+      <FieldRow label="Property Management" hint="% of gross rent"><NumInput value={inputs.propertyManagement} onChange={v => set('propertyManagement', v)} width={60} /><span className="unit">%</span></FieldRow>
+      <FieldRow label="Maintenance & Repairs"><span className="unit">$</span><NumInput value={inputs.maintenance} onChange={v => set('maintenance', v)} /></FieldRow>
+      <FieldRow label="Strata / Body Corp"><span className="unit">$</span><NumInput value={inputs.strataLevies} onChange={v => set('strataLevies', v)} /></FieldRow>
+      <FieldRow label="Land Tax"><span className="unit">$</span><NumInput value={inputs.landTax} onChange={v => set('landTax', v)} /></FieldRow>
+      <FieldRow label="Other Expenses"><span className="unit">$</span><NumInput value={inputs.otherExpenses} onChange={v => set('otherExpenses', v)} /></FieldRow>
+      <FieldRow label="Expense Growth p.a."><NumInput value={inputs.expenseGrowth} onChange={v => set('expenseGrowth', v)} width={60} /><span className="unit">%</span></FieldRow>
+
+      {/* FINANCE */}
+      <div className="section-header">Finance</div>
+      <div className="loan-tabs">
+        {['PI','IO'].map(t => (
+          <div key={t} className={`loan-tab${inputs.loanType === t ? ' active' : ''}`} onClick={() => set('loanType', t)}>
+            {t === 'PI' ? 'Principal & Interest' : 'Interest Only'}
+          </div>
+        ))}
+      </div>
+      <FieldRow label="Loan Amount"><span className="unit">$</span><NumInput value={inputs.loanAmount} onChange={v => set('loanAmount', v)} width={100} /></FieldRow>
+      <FieldRow label="LVR"><div style={{ fontWeight:700, fontSize:12, color: an.lvr > 80 ? '#ef4444' : '#1a2a4a' }}>{an.lvr.toFixed(1)}%</div></FieldRow>
+      <FieldRow label="Interest Rate"><NumInput value={inputs.interestRate} onChange={v => set('interestRate', v)} width={60} /><span className="unit">%</span></FieldRow>
+      <FieldRow label="Loan Term"><NumInput value={inputs.loanTerm} onChange={v => set('loanTerm', v)} width={60} /><span className="unit">yrs</span></FieldRow>
+      {inputs.loanType === 'IO' && (
+        <FieldRow label="IO Period"><NumInput value={inputs.ioPeriod} onChange={v => set('ioPeriod', v)} width={60} /><span className="unit">yrs</span></FieldRow>
+      )}
+      <FieldRow label="Offset Balance"><span className="unit">$</span><NumInput value={inputs.offsetBalance} onChange={v => set('offsetBalance', v)} /></FieldRow>
+      <div className="loan-summary">
+        Monthly repayment: <strong>{fmt(an.mPmt)}</strong>
+        {inputs.loanType === 'IO' && num(inputs.ioPeriod) > 0 && ` (IO period)`}
+      </div>
+
+      {/* DEPRECIATION */}
+      <div className="section-header">Tax Depreciation</div>
+      <FieldRow label="Building (Div 43)" hint="2.5% pa of construction cost"><span className="unit">$</span><NumInput value={inputs.buildingDepreciation} onChange={v => set('buildingDepreciation', v)} /></FieldRow>
+      <FieldRow label="Fittings (Div 40)" hint="Plant & equipment, ~10yr life"><span className="unit">$</span><NumInput value={inputs.fittingsDepreciation} onChange={v => set('fittingsDepreciation', v)} /></FieldRow>
+
+      {/* GROWTH & EXIT */}
+      <div className="section-header">Growth &amp; Exit</div>
+      <div className="slider-row">
+        <div className="slider-label"><span>Capital Growth p.a.</span><span className="slider-val">{num(inputs.capitalGrowth).toFixed(1)}%</span></div>
+        <input type="range" min={0} max={15} step={0.5} value={inputs.capitalGrowth}
+          onChange={e => set('capitalGrowth', e.target.value)} />
+      </div>
+      <FieldRow label="Selling Costs"><NumInput value={inputs.sellingCosts} onChange={v => set('sellingCosts', v)} width={60} /><span className="unit">%</span></FieldRow>
+      <FieldRow label="Exit Year"><NumInput value={inputs.exitYear} onChange={v => set('exitYear', Math.min(v, inputs.projectionYears))} width={60} /><span className="unit">yr</span></FieldRow>
+
+      {/* PROJECTION */}
+      <div className="section-header">Projection Period</div>
+      <div className="proj-group">
+        {[5,10,15,20,25,30].map(y => (
+          <button key={y}
+            className={`proj-btn${num(inputs.projectionYears) === y ? ' active' : ''}`}
+            onClick={() => set('projectionYears', y)}>{y}yr</button>
+        ))}
+      </div>
+
+      {/* INVESTORS */}
+      <div className="section-header">Investors &amp; Tax</div>
+      <div className="investor-table">
+        <div style={{ display:'flex', gap:5, marginBottom:4, fontSize:10, color:'#9ca3af', padding:'0 2px' }}>
+          <span style={{ flex:1 }}>Name</span>
+          <span style={{ width:70 }}>Income $</span>
+          <span style={{ width:45 }}>Own %</span>
+          <span style={{ width:20 }} />
+        </div>
+        {(inputs.investors || []).map((inv, idx) => (
+          <div key={idx} className="investor-row">
+            <input className="name" value={inv.name} onChange={e => updateInvestor(idx, 'name', e.target.value)} />
+            <input className="income" type="number" value={inv.income} onChange={e => updateInvestor(idx, 'income', e.target.value)} />
+            <input className="pct" type="number" value={inv.ownership} onChange={e => updateInvestor(idx, 'ownership', e.target.value)} />
+            <button className="remove-investor-btn" onClick={() => removeInvestor(idx)}>×</button>
+          </div>
+        ))}
+      </div>
+      <div className={ownerSum === 100 ? 'investor-ownership-ok' : 'investor-ownership-warn'}>
+        {ownerSum === 100 ? `✓ Ownership = 100%` : `⚠ Ownership = ${ownerSum}% (must total 100%)`}
+      </div>
+      <button className="add-investor-btn" onClick={addInvestor}>+ Add Investor</button>
+
+      <div style={{ height: 16 }} />
+    </div>
+  );
+}
+
+/* ─── RESULTS PANEL ──────────────────────────────────────────────── */
+function ResultsPanel({ an, inputs }) {
+  const rows = an.rows;
+  const yrs  = num(inputs.projectionYears);
+  const chartData = rows.map(r => ({
+    year: `Y${r.year}`,
+    'Net Rent': r.netRent,
+    'Expenses': -r.opExp,
+    'Interest': -r.interest,
+    'Tax Benefit': r.taxBen,
+    'After-Tax CF': r.atCF,
+    'Property Value': r.propVal,
+    'Loan Balance': r.loanBal,
+    'Equity': r.equity,
+  }));
+
+  const irrPct = (an.irr * 100).toFixed(1);
+
+  return (
+    <div className="results-panel">
+      {/* HERO */}
+      <div className="hero-banner">
+        <div className="hero-irr">
+          <div className="hero-irr-label">Levered IRR</div>
+          <div className="hero-irr-value">{irrPct}%</div>
+          <div className="hero-irr-sub">After tax · {inputs.exitYear}yr hold · {inputs.state}</div>
+        </div>
+        <div className="hero-stats">
+          <div className="hero-stat">
+            <div className="hero-stat-label">Equity at Exit</div>
+            <div className="hero-stat-value">{fmtK(an.netCGT)}</div>
+            <div className="hero-stat-sub">after CGT</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-label">Equity Multiple</div>
+            <div className="hero-stat-value">{an.eqMultiple.toFixed(2)}×</div>
+            <div className="hero-stat-sub">total return</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-label">Net Yield</div>
+            <div className="hero-stat-value">{fmtPct(an.netYield)}</div>
+            <div className="hero-stat-sub">year 1</div>
+          </div>
+        </div>
+      </div>
+
+      {/* METRIC CARDS */}
+      <div className="metric-cards">
+        <div className="metric-card"><div className="metric-card-top yellow" /><div className="metric-card-body"><div className="metric-card-label">Gross Yield</div><div className="metric-card-value">{fmtPct(an.grossYield)}</div><div className="metric-card-sub">{fmt(num(inputs.weeklyRent) * 52)} p.a.</div></div></div>
+        <div className="metric-card"><div className="metric-card-top green" /><div className="metric-card-body"><div className="metric-card-label">Net Yield</div><div className="metric-card-value">{fmtPct(an.netYield)}</div><div className="metric-card-sub">after all expenses</div></div></div>
+        <div className="metric-card"><div className="metric-card-top blue" /><div className="metric-card-body"><div className="metric-card-label">Cash-on-Cash</div><div className={`metric-card-value${an.coc < 0 ? ' neg' : ''}`}>{fmtPct(an.coc)}</div><div className="metric-card-sub">yr 1 after tax</div></div></div>
+        <div className="metric-card"><div className="metric-card-top orange" /><div className="metric-card-body"><div className="metric-card-label">Total AT Cash Flow</div><div className={`metric-card-value${an.totalAtCF < 0 ? ' neg' : ''}`}>{fmtK(an.totalAtCF)}</div><div className="metric-card-sub">over {inputs.exitYear} years</div></div></div>
+        <div className="metric-card"><div className="metric-card-top red" /><div className="metric-card-body"><div className="metric-card-label">LVR</div><div className={`metric-card-value${an.lvr > 80 ? ' neg' : ''}`}>{an.lvr.toFixed(1)}%</div><div className="metric-card-sub">{fmt(an.loan)} loan</div></div></div>
+      </div>
+
+      {/* CHARTS ROW */}
+      <div className="charts-row">
+        <div className="chart-card" style={{ flex: 2 }}>
+          <h4>Annual Cash Flow Breakdown</h4>
+          <ResponsiveContainer width="100%" height={180}>
+            <ComposedChart data={chartData} margin={{ top:0, right:8, bottom:0, left:0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis dataKey="year" tick={{ fontSize:10 }} />
+              <YAxis tick={{ fontSize:10 }} tickFormatter={v => `$${Math.abs(v/1000).toFixed(0)}k`} />
+              <Tooltip formatter={(v, n) => [fmt(v), n]} labelStyle={{ fontWeight:700 }} />
+              <Legend wrapperStyle={{ fontSize:10 }} />
+              <Bar dataKey="Net Rent" fill="#3b82f6" stackId="a" />
+              <Bar dataKey="Expenses" fill="#f87171" stackId="a" />
+              <Bar dataKey="Interest" fill="#f97316" stackId="a" />
+              <Bar dataKey="Tax Benefit" fill="#10b981" stackId="a" />
+              <ReferenceLine y={0} stroke="#1a2a4a" strokeWidth={1.5} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="chart-card">
+          <h4>Property Value vs Loan Balance</h4>
+          <ResponsiveContainer width="100%" height={180}>
+            <AreaChart data={chartData} margin={{ top:0, right:8, bottom:0, left:0 }}>
+              <defs>
+                <linearGradient id="gVal" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#1a2a4a" stopOpacity={0.3}/><stop offset="95%" stopColor="#1a2a4a" stopOpacity={0}/></linearGradient>
+                <linearGradient id="gLoan" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/><stop offset="95%" stopColor="#ef4444" stopOpacity={0}/></linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis dataKey="year" tick={{ fontSize:10 }} />
+              <YAxis tick={{ fontSize:10 }} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} />
+              <Tooltip formatter={(v, n) => [fmt(v), n]} />
+              <Legend wrapperStyle={{ fontSize:10 }} />
+              <Area type="monotone" dataKey="Property Value" stroke="#1a2a4a" fill="url(#gVal)" strokeWidth={2} />
+              <Area type="monotone" dataKey="Loan Balance" stroke="#ef4444" fill="url(#gLoan)" strokeWidth={2} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* EQUITY GROWTH CHART */}
+      <div className="chart-card" style={{ marginBottom:10 }}>
+        <h4>Equity Growth Over Time</h4>
+        <ResponsiveContainer width="100%" height={140}>
+          <AreaChart data={chartData} margin={{ top:0, right:8, bottom:0, left:0 }}>
+            <defs>
+              <linearGradient id="gEq" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/><stop offset="95%" stopColor="#10b981" stopOpacity={0}/></linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+            <XAxis dataKey="year" tick={{ fontSize:10 }} />
+            <YAxis tick={{ fontSize:10 }} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} />
+            <Tooltip formatter={(v, n) => [fmt(v), n]} />
+            <Area type="monotone" dataKey="Equity" stroke="#10b981" fill="url(#gEq)" strokeWidth={2} />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* CASH FLOW TABLE */}
+      <div className="table-card">
+        <div className="table-card-header">
+          <h3>Annual Cash Flow Schedule</h3>
+          <p>After-tax cash flows over {yrs}-year projection period</p>
+        </div>
+        <div style={{ overflowX:'auto' }}>
+          <table className="cf-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                {rows.map(r => <th key={r.year}>Y{r.year}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="group-header"><td colSpan={rows.length + 1}>Income</td></tr>
+              <tr className="sub-row"><td>Gross Rent</td>{rows.map(r => <td key={r.year}>{fmt(r.grossRent)}</td>)}</tr>
+              <tr className="sub-row"><td>Vacancy Loss</td>{rows.map(r => <td key={r.year} className="neg">({fmt(r.vacancy)})</td>)}</tr>
+              <tr className="bold-row"><td>Net Rental Income</td>{rows.map(r => <td key={r.year}>{fmt(r.netRent)}</td>)}</tr>
+              <tr className="group-header"><td colSpan={rows.length + 1}>Operating Expenses</td></tr>
+              <tr className="sub-row"><td>Property Mgmt</td>{rows.map(r => <td key={r.year} className="neg">({fmt(r.mgmt)})</td>)}</tr>
+              <tr className="sub-row"><td>All Other Expenses</td>{rows.map(r => <td key={r.year} className="neg">({fmt(r.opExp - r.mgmt)})</td>)}</tr>
+              <tr className="bold-row"><td>Net Operating Income</td>{rows.map(r => <td key={r.year} className={r.noi < 0 ? 'neg' : 'pos'}>{fmt(r.noi)}</td>)}</tr>
+              <tr className="group-header"><td colSpan={rows.length + 1}>Financing</td></tr>
+              <tr className="sub-row"><td>Interest</td>{rows.map(r => <td key={r.year} className="neg">({fmt(r.interest)})</td>)}</tr>
+              <tr className="sub-row"><td>Principal</td>{rows.map(r => <td key={r.year} className="neg">({fmt(r.principal)})</td>)}</tr>
+              <tr className="sub-row"><td>Loan Balance</td>{rows.map(r => <td key={r.year}>{fmt(r.loanBal)}</td>)}</tr>
+              <tr className="bold-row"><td>Pre-Tax Cash Flow</td>{rows.map(r => <td key={r.year} className={r.pretaxCF < 0 ? 'neg' : 'pos'}>{fmt(r.pretaxCF)}</td>)}</tr>
+              <tr className="group-header"><td colSpan={rows.length + 1}>Tax</td></tr>
+              <tr className="sub-row"><td>Depreciation (non-cash)</td>{rows.map(r => <td key={r.year} className="neg">({fmt(r.depr)})</td>)}</tr>
+              <tr className="sub-row"><td>Taxable Income</td>{rows.map(r => <td key={r.year} className={r.taxIncome < 0 ? 'neg' : ''}>{r.taxIncome < 0 ? `(${fmt(-r.taxIncome)})` : fmt(r.taxIncome)}</td>)}</tr>
+              <tr className="sub-row"><td>Tax Benefit / (Cost)</td>{rows.map(r => <td key={r.year} className={r.taxBen > 0 ? 'pos' : 'neg'}>{fmt(r.taxBen)}</td>)}</tr>
+              <tr className="bold-row"><td>After-Tax Cash Flow</td>{rows.map(r => <td key={r.year} className={r.atCF < 0 ? 'neg' : 'pos'}>{fmt(r.atCF)}</td>)}</tr>
+              <tr className="group-header"><td colSpan={rows.length + 1}>Capital</td></tr>
+              <tr className="sub-row"><td>Property Value</td>{rows.map(r => <td key={r.year}>{fmt(r.propVal)}</td>)}</tr>
+              <tr className="bold-row"><td>Equity</td>{rows.map(r => <td key={r.year} className="pos">{fmt(r.equity)}</td>)}</tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* EXIT SUMMARY */}
+      <div className="table-card">
+        <div className="table-card-header">
+          <h3>Exit Analysis — Year {an.exitYr}</h3>
+          <p>Sale proceeds, CGT liability and net return to investors</p>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:1, background:'#f3f4f6' }}>
+          {[
+            ['Sale Price', an.salePrice, false],
+            ['Selling Costs', -an.sellAmt, true],
+            ['Net Sale Proceeds', an.netProc, false],
+            ['Loan at Exit', -an.loanAtExit, true],
+            ['Gross Equity Proceeds', an.grossEqProc, false],
+            ['Cost Base', an.costBase, false],
+            ['Capital Gain', an.capGain, false],
+            ['50% CGT Discount', -an.cgtDisc, false],
+            ['Taxable Gain', an.taxGain, false],
+            ['CGT Liability', -an.cgtLiab, true],
+            ['Net After CGT', an.netCGT, false],
+            ['Total AT CF', an.totalAtCF, false],
+          ].map(([label, val, neg]) => (
+            <div key={label} style={{ background:'white', padding:'10px 14px' }}>
+              <div style={{ fontSize:10, color:'#9ca3af', fontWeight:700, textTransform:'uppercase', letterSpacing:.4 }}>{label}</div>
+              <div style={{ fontSize:15, fontWeight:800, color: neg ? '#ef4444' : val > 0 ? '#1a2a4a' : '#ef4444', marginTop:2 }}>{fmt(val)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ANALYSIS TAB ───────────────────────────────────────────────── */
+function AnalysisTab({ inputs, onChange }) {
+  const an = useMemo(() => computeAnalysis(inputs), [inputs]);
+  return (
+    <div className="analysis-wrap">
+      <InputPanel inputs={inputs} onChange={onChange} />
+      <ResultsPanel an={an} inputs={inputs} />
+    </div>
+  );
+}
+
+/* ─── PORTFOLIO TAB ──────────────────────────────────────────────── */
+function PortfolioTab({ properties, onSelect, onAdd, onRemove }) {
+  const analyses = properties.map(p => computeAnalysis(p.inputs));
+  const totalVal = analyses.reduce((s, a) => s + a.pp, 0);
+  const totalEquity = analyses.reduce((s, a) => s + a.netCGT, 0);
+  const avgIRR = analyses.length ? analyses.reduce((s, a) => s + a.irr, 0) / analyses.length : 0;
+  const totalCF = analyses.reduce((s, a) => s + a.totalAtCF, 0);
+
+  return (
+    <div className="portfolio-wrap">
+      <div className="portfolio-summary">
+        <div className="port-kpi"><div className="port-kpi-label">Properties</div><div className="port-kpi-value">{properties.length}</div><div className="port-kpi-sub">in portfolio</div></div>
+        <div className="port-kpi"><div className="port-kpi-label">Total Value</div><div className="port-kpi-value">{fmtK(totalVal)}</div><div className="port-kpi-sub">at purchase</div></div>
+        <div className="port-kpi"><div className="port-kpi-label">Total Exit Equity</div><div className="port-kpi-value">{fmtK(totalEquity)}</div><div className="port-kpi-sub">after CGT at exit</div></div>
+        <div className="port-kpi"><div className="port-kpi-label">Avg IRR</div><div className="port-kpi-value">{fmtPct(avgIRR)}</div><div className="port-kpi-sub">weighted average</div></div>
+        <div className="port-kpi"><div className="port-kpi-label">Total Cash Flow</div><div className={`port-kpi-value${totalCF < 0 ? ' text-red' : ''}`}>{fmtK(totalCF)}</div><div className="port-kpi-sub">combined AT</div></div>
+      </div>
+      <div className="property-cards">
+        {properties.map((prop, idx) => {
+          const a = analyses[idx];
+          return (
+            <div key={prop.id} className="property-card">
+              <div className="property-card-body">
+                <div className="property-card-addr">{prop.inputs.address || 'Unnamed Property'}</div>
+                <div className="property-card-state">{prop.inputs.suburb} {prop.inputs.state} · {prop.inputs.propertyType}</div>
+                <span className="property-card-badge">{(a.irr * 100).toFixed(1)}% IRR</span>
+                <div className="property-card-stats">
+                  <div className="prop-stat"><div className="prop-stat-val">{fmtK(a.pp)}</div><div className="prop-stat-label">Purchase</div></div>
+                  <div className="prop-stat"><div className="prop-stat-val">{fmtPct(a.grossYield)}</div><div className="prop-stat-label">Gross Yield</div></div>
+                  <div className="prop-stat"><div className="prop-stat-val">{fmtK(a.netCGT)}</div><div className="prop-stat-label">Exit Equity</div></div>
+                </div>
+              </div>
+              <div className="property-card-actions">
+                <button className="btn-view" onClick={() => onSelect(idx)}>Analyse</button>
+                <button className="btn-remove" onClick={() => onRemove(idx)}>Remove</button>
+              </div>
+            </div>
+          );
+        })}
+        <div className="add-property-card" onClick={onAdd}>
+          <div className="add-property-plus">+</div>
+          <div className="add-property-label">Add Property</div>
+          <div className="add-property-sub">Start a new analysis and add it to your portfolio</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── SCENARIOS TAB ──────────────────────────────────────────────── */
+function ScenariosTab({ inputs }) {
+  const [sc, setSc] = useState({ bullGrowth:8, bullRent:5, bullRate:5.5, baseGrowth:5, baseRent:3.5, baseRate:6.5, bearGrowth:2, bearRent:1, bearRate:7.5 });
+  const set = (k, v) => setSc(s => ({ ...s, [k]: v }));
+
+  const make = (cg, rg, ir) => computeAnalysis({ ...inputs, capitalGrowth: cg, rentGrowth: rg, interestRate: ir });
+  const base = useMemo(() => make(sc.baseGrowth, sc.baseRent, sc.baseRate), [inputs, sc]);
+  const bull = useMemo(() => make(sc.bullGrowth, sc.bullRent, sc.bullRate), [inputs, sc]);
+  const bear = useMemo(() => make(sc.bearGrowth, sc.bearRent, sc.bearRate), [inputs, sc]);
+
+  const years = num(inputs.projectionYears);
+  const chartData = base.rows.map((r, i) => ({
+    year: `Y${r.year}`,
+    'Bull AT CF': bull.rows[i].atCF,
+    'Base AT CF': base.rows[i].atCF,
+    'Bear AT CF': bear.rows[i].atCF,
+  }));
+  const eqData = base.rows.map((r, i) => ({
+    year: `Y${r.year}`,
+    'Bull Equity': bull.rows[i].equity,
+    'Base Equity': base.rows[i].equity,
+    'Bear Equity': bear.rows[i].equity,
+  }));
+
+  return (
+    <div className="scenarios-wrap">
+      <div className="scenario-section">
+        <h3>Scenario Analysis</h3>
+        <p>Compare bull, base and bear case outcomes across key variables</p>
+
+        <div className="scenario-assumptions">
+          <h4>Scenario Assumptions</h4>
+          <div className="assumption-grid">
+            {[
+              ['Bull Capital Growth', 'bullGrowth', '%'],
+              ['Bull Rent Growth', 'bullRent', '%'],
+              ['Bull Interest Rate', 'bullRate', '%'],
+              ['Base Capital Growth', 'baseGrowth', '%'],
+              ['Base Rent Growth', 'baseRent', '%'],
+              ['Base Interest Rate', 'baseRate', '%'],
+              ['Bear Capital Growth', 'bearGrowth', '%'],
+              ['Bear Rent Growth', 'bearRent', '%'],
+              ['Bear Interest Rate', 'bearRate', '%'],
+            ].map(([label, key, unit]) => (
+              <div key={key} className="assumption-field">
+                <label>{label}</label>
+                <input type="number" step="0.5" value={sc[key]} onChange={e => set(key, e.target.value)} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="scenario-compare">
+          {[
+            ['bear', 'Bear Case', bear],
+            ['base', 'Base Case', base],
+            ['bull', 'Bull Case', bull],
+          ].map(([cls, label, a]) => (
+            <div key={cls} className={`scenario-col ${cls}`}>
+              <div className="scenario-col-label">{label}</div>
+              <div className="scenario-col-irr">{(a.irr * 100).toFixed(1)}%</div>
+              <div className="scenario-col-stat">IRR after tax</div>
+              <div style={{ marginTop:10, fontSize:12 }}>
+                <div>{fmtK(a.netCGT)} exit equity</div>
+                <div>{fmtK(a.totalAtCF)} total CF</div>
+                <div>{fmtPct(a.grossYield)} gross yield</div>
+                <div>{a.eqMultiple.toFixed(2)}× equity multiple</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="charts-row">
+          <div className="chart-card">
+            <h4>After-Tax Cash Flow by Scenario</h4>
+            <ResponsiveContainer width="100%" height={180}>
+              <ComposedChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis dataKey="year" tick={{ fontSize:10 }} />
+                <YAxis tick={{ fontSize:10 }} tickFormatter={v => `${(v/1000).toFixed(0)}k`} />
+                <Tooltip formatter={(v, n) => [fmt(v), n]} />
+                <Legend wrapperStyle={{ fontSize:10 }} />
+                <Bar dataKey="Bull AT CF" fill="#10b981" />
+                <Bar dataKey="Base AT CF" fill="#3b82f6" />
+                <Bar dataKey="Bear AT CF" fill="#ef4444" />
+                <ReferenceLine y={0} stroke="#1a2a4a" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="chart-card">
+            <h4>Equity Growth by Scenario</h4>
+            <ResponsiveContainer width="100%" height={180}>
+              <AreaChart data={eqData}>
+                <defs>
+                  <linearGradient id="gBull" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/><stop offset="95%" stopColor="#10b981" stopOpacity={0}/></linearGradient>
+                  <linearGradient id="gBase" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/><stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/></linearGradient>
+                  <linearGradient id="gBear" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/><stop offset="95%" stopColor="#ef4444" stopOpacity={0}/></linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis dataKey="year" tick={{ fontSize:10 }} />
+                <YAxis tick={{ fontSize:10 }} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} />
+                <Tooltip formatter={(v, n) => [fmt(v), n]} />
+                <Legend wrapperStyle={{ fontSize:10 }} />
+                <Area type="monotone" dataKey="Bull Equity" stroke="#10b981" fill="url(#gBull)" strokeWidth={2} />
+                <Area type="monotone" dataKey="Base Equity" stroke="#3b82f6" fill="url(#gBase)" strokeWidth={2} />
+                <Area type="monotone" dataKey="Bear Equity" stroke="#ef4444" fill="url(#gBear)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <table className="scenario-table">
+          <thead>
+            <tr>
+              <th style={{ textAlign:'left' }}>Metric</th>
+              <th>Bear</th>
+              <th>Base</th>
+              <th>Bull</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ['IRR (after tax)',        a => `${(a.irr*100).toFixed(1)}%`],
+              ['Equity Multiple',        a => `${a.eqMultiple.toFixed(2)}×`],
+              ['Sale Price at Exit',     a => fmt(a.salePrice)],
+              ['Exit Equity (after CGT)',a => fmt(a.netCGT)],
+              ['Total AT Cash Flow',     a => fmt(a.totalAtCF)],
+              ['Gross Yield',            a => fmtPct(a.grossYield)],
+              ['Net Yield',              a => fmtPct(a.netYield)],
+              ['CGT Liability',          a => fmt(a.cgtLiab)],
+            ].map(([label, fn]) => (
+              <tr key={label}>
+                <td>{label}</td>
+                <td style={{ color:'#c0392b', fontWeight:600 }}>{fn(bear)}</td>
+                <td style={{ color:'#1a2a4a', fontWeight:600 }}>{fn(base)}</td>
+                <td style={{ color:'#059669', fontWeight:600 }}>{fn(bull)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* ─── CGT TAB ────────────────────────────────────────────────────── */
+function CGTTab({ inputs }) {
+  const [exitYr, setExitYr] = useState(num(inputs.exitYear) || 10);
+  const [addCosts, setAddCosts] = useState(0);
+  const [improvements, setImprovements] = useState(0);
+
+  const an = useMemo(() => computeAnalysis({ ...inputs, exitYear: exitYr }), [inputs, exitYr]);
+
+  const investors = (inputs.investors || []).filter(i => num(i.ownership) > 0);
+
+  return (
+    <div style={{ flex:1, overflowY:'auto', padding:20 }}>
+      <div className="cgt-section">
+        <h3>Capital Gains Tax Calculator</h3>
+        <p>Australian CGT analysis with 50% discount for assets held &gt;12 months</p>
+      </div>
+
+      <div className="cgt-summary-banner">
+        <div className="cgt-banner-col">
+          <h4>Sale</h4>
+          <div className="cgt-banner-stat"><div className="cgt-banner-stat-label">Sale Price</div><div className="cgt-banner-stat-value">{fmt(an.salePrice)}</div></div>
+          <div className="cgt-banner-stat"><div className="cgt-banner-stat-label">Selling Costs</div><div className="cgt-banner-stat-value">({fmt(an.sellAmt)})</div></div>
+          <div className="cgt-banner-stat"><div className="cgt-banner-stat-label">Net Proceeds</div><div className="cgt-banner-stat-value">{fmt(an.netProc)}</div></div>
+        </div>
+        <div className="cgt-banner-col">
+          <h4>Gain</h4>
+          <div className="cgt-banner-stat"><div className="cgt-banner-stat-label">Cost Base</div><div className="cgt-banner-stat-value">{fmt(an.costBase + improvements)}</div></div>
+          <div className="cgt-banner-stat"><div className="cgt-banner-stat-label">Capital Gain</div><div className="cgt-banner-stat-value">{fmt(an.capGain - improvements)}</div></div>
+          <div className="cgt-banner-stat"><div className="cgt-banner-stat-label">50% Discount</div><div className="cgt-banner-stat-value">({fmt(an.cgtDisc)})</div></div>
+        </div>
+        <div className="cgt-banner-col">
+          <h4>Net Outcome</h4>
+          <div className="cgt-banner-stat"><div className="cgt-banner-stat-label">CGT Liability</div><div className="cgt-banner-stat-value red">({fmt(an.cgtLiab)})</div></div>
+          <div className="cgt-banner-stat"><div className="cgt-banner-stat-label">Net After CGT</div><div className="cgt-banner-stat-value highlight">{fmt(an.netCGT)}</div></div>
+        </div>
+      </div>
+
+      <div className="cgt-property-card">
+        <div className="cgt-property-header">{inputs.address} — Exit Year {exitYr}</div>
+        <div className="cgt-property-body">
+          <div className="cgt-input-group">
+            <h5>Exit Parameters</h5>
+            <div className="cgt-field"><label>Exit Year</label><input type="number" value={exitYr} onChange={e => setExitYr(Math.max(1, Math.min(num(inputs.projectionYears), num(e.target.value))))} /></div>
+            <div className="cgt-field"><label>Capital Improvements ($)</label><input type="number" value={improvements} onChange={e => setImprovements(num(e.target.value))} /></div>
+            <div className="cgt-field"><label>Additional Acquisition Costs ($)</label><input type="number" value={addCosts} onChange={e => setAddCosts(num(e.target.value))} /></div>
+          </div>
+          <div className="cgt-input-group">
+            <h5>Key Figures</h5>
+            <div className="cgt-field"><label>Purchase Price</label><span style={{ fontWeight:700 }}>{fmt(an.pp)}</span></div>
+            <div className="cgt-field"><label>Acquisition Costs</label><span style={{ fontWeight:700 }}>{fmt(an.acqCosts)}</span></div>
+            <div className="cgt-field"><label>Total Cost Base</label><span style={{ fontWeight:700 }}>{fmt(an.costBase + improvements + addCosts)}</span></div>
+            <div className="cgt-field"><label>Holding Period</label><span style={{ fontWeight:700 }}>{exitYr} year{exitYr !== 1 ? 's' : ''}</span></div>
+            <div className="cgt-field"><label>CGT Discount Eligible</label><span style={{ fontWeight:700, color:'#10b981' }}>Yes (50%)</span></div>
+            <div className="cgt-field"><label>Combined Marginal Rate</label><span style={{ fontWeight:700 }}>{fmtPct(an.combinedMR)}</span></div>
+          </div>
+        </div>
+        <div style={{ padding:'0 14px 14px' }}>
+          <div className="cgt-results-grid">
+            <div className="cgt-result-box proceeds">
+              <h5>Sale Proceeds</h5>
+              <div className="cgt-line"><label>Gross Sale Price</label><span>{fmt(an.salePrice)}</span></div>
+              <div className="cgt-line"><label>Selling Costs</label><span className="neg">({fmt(an.sellAmt)})</span></div>
+              <div className="cgt-line"><label>Loan Repaid</label><span className="neg">({fmt(an.loanAtExit)})</span></div>
+              <div className="cgt-line total"><label>Gross Equity</label><span>{fmt(an.grossEqProc)}</span></div>
+            </div>
+            <div className="cgt-result-box gains">
+              <h5>Capital Gain</h5>
+              <div className="cgt-line"><label>Net Proceeds</label><span>{fmt(an.netProc)}</span></div>
+              <div className="cgt-line"><label>Cost Base</label><span className="neg">({fmt(an.costBase + improvements + addCosts)})</span></div>
+              <div className="cgt-line"><label>Gross Capital Gain</label><span>{fmt(an.capGain - improvements - addCosts)}</span></div>
+              <div className="cgt-line"><label>50% CGT Discount</label><span className="neg">({fmt(an.cgtDisc)})</span></div>
+              <div className="cgt-line total"><label>Taxable Gain</label><span>{fmt(an.taxGain)}</span></div>
+            </div>
+            <div className="cgt-result-box outcome">
+              <h5>Tax Outcome</h5>
+              <div className="cgt-line"><label>Taxable Gain</label><span>{fmt(an.taxGain)}</span></div>
+              <div className="cgt-line"><label>Marginal Rate</label><span>{fmtPct(an.combinedMR)}</span></div>
+              <div className="cgt-line"><label>CGT Liability</label><span className="neg">({fmt(an.cgtLiab)})</span></div>
+              <div className="cgt-line"><label>Gross Equity</label><span>{fmt(an.grossEqProc)}</span></div>
+              <div className="cgt-line total"><label>Net After CGT</label><span className="pos">{fmt(an.netCGT)}</span></div>
+            </div>
+          </div>
+          {investors.length > 0 && (
+            <div style={{ marginTop:14 }}>
+              <div style={{ fontSize:11, fontWeight:800, textTransform:'uppercase', color:'#9ca3af', letterSpacing:.5, marginBottom:8 }}>CGT Split by Investor</div>
+              <table className="cf-table">
+                <thead>
+                  <tr>
+                    <th>Investor</th>
+                    <th>Ownership</th>
+                    <th>Income</th>
+                    <th>Marginal Rate</th>
+                    <th>Share of Gain</th>
+                    <th>CGT Liability</th>
+                    <th>Net Proceeds</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {investors.map((inv, i) => {
+                    const own = num(inv.ownership) / 100;
+                    const mr  = marginalRate(num(inv.income));
+                    const shareGain = an.taxGain * own;
+                    const cgtShare  = Math.round(shareGain * mr);
+                    const netShare  = Math.round(an.grossEqProc * own - cgtShare);
+                    return (
+                      <tr key={i}>
+                        <td>{inv.name}</td>
+                        <td>{num(inv.ownership).toFixed(0)}%</td>
+                        <td>{fmt(num(inv.income))}</td>
+                        <td>{fmtPct(mr)}</td>
+                        <td>{fmt(shareGain)}</td>
+                        <td className="neg">({fmt(cgtShare)})</td>
+                        <td className="pos">{fmt(netShare)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── REPORT TAB ─────────────────────────────────────────────────── */
+function ReportTab({ inputs }) {
+  const an = useMemo(() => computeAnalysis(inputs), [inputs]);
+  const today = new Date().toLocaleDateString('en-AU', { day:'numeric', month:'long', year:'numeric' });
+
+  return (
+    <div className="report-wrap">
+      <div className="report-selector">
+        <div>
+          <h3>Investment Report — {inputs.address}</h3>
+          <div style={{ fontSize:11, color:'#9ca3af', marginTop:2 }}>Generated {today}</div>
+        </div>
+        <div className="report-selector-right">
+          <span className="report-badge">{inputs.state}</span>
+          <span className="report-badge">{inputs.projectionYears}yr Projection</span>
+          <button className="run-btn" onClick={() => window.print()}>Print / PDF</button>
+        </div>
+      </div>
+
+      <div className="report-content">
+        <div className="report-cover">
+          <h1>{inputs.address || 'Investment Property'}</h1>
+          <p>{inputs.suburb}, {inputs.state} &nbsp;·&nbsp; {inputs.propertyType} &nbsp;·&nbsp; {inputs.projectionYears}-Year Analysis</p>
+          <div className="report-cover-stats">
+            <div><div className="report-cover-stat-label">IRR (After Tax)</div><div className="report-cover-stat-value">{(an.irr * 100).toFixed(1)}%</div></div>
+            <div><div className="report-cover-stat-label">Exit Equity</div><div className="report-cover-stat-value">{fmtK(an.netCGT)}</div></div>
+            <div><div className="report-cover-stat-label">Equity Multiple</div><div className="report-cover-stat-value">{an.eqMultiple.toFixed(2)}×</div></div>
+            <div><div className="report-cover-stat-label">Gross Yield</div><div className="report-cover-stat-value">{fmtPct(an.grossYield)}</div></div>
+          </div>
+        </div>
+
+        <div className="report-body">
+          <div className="report-section">
+            <h3>Property Summary</h3>
+            <div className="report-two-col">
+              <div>
+                {[['Address', inputs.address], ['Suburb / State', `${inputs.suburb}, ${inputs.state}`], ['Property Type', inputs.propertyType], ['Purchase Price', fmt(an.pp)], ['LVR', `${an.lvr.toFixed(1)}%`], ['Loan Amount', fmt(an.loan)]].map(([l, v]) =>
+                  <div key={l} className="report-stat-row"><label>{l}</label><span>{v}</span></div>)}
+              </div>
+              <div>
+                {[['Stamp Duty', fmt(an.sd)], ['Acquisition Costs', fmt(an.acqCosts)], ['Total Equity Invested', fmt(an.equity0)], ['Monthly Repayment', fmt(an.mPmt)], ['Loan Type', inputs.loanType], ['Interest Rate', `${inputs.interestRate}%`]].map(([l, v]) =>
+                  <div key={l} className="report-stat-row"><label>{l}</label><span>{v}</span></div>)}
+              </div>
+            </div>
+          </div>
+
+          <div className="report-section">
+            <h3>Return Metrics</h3>
+            <div className="report-two-col">
+              <div>
+                {[['IRR (Levered, After Tax)', `${(an.irr * 100).toFixed(1)}%`], ['Equity Multiple', `${an.eqMultiple.toFixed(2)}×`], ['Cash-on-Cash Return', fmtPct(an.coc)], ['Total After-Tax CF', fmt(an.totalAtCF)]].map(([l, v]) =>
+                  <div key={l} className="report-stat-row"><label>{l}</label><span>{v}</span></div>)}
+              </div>
+              <div>
+                {[['Gross Yield', fmtPct(an.grossYield)], ['Net Yield', fmtPct(an.netYield)], ['Combined Marginal Tax Rate', fmtPct(an.combinedMR)], ['Projection Period', `${inputs.projectionYears} years`]].map(([l, v]) =>
+                  <div key={l} className="report-stat-row"><label>{l}</label><span>{v}</span></div>)}
+              </div>
+            </div>
+          </div>
+
+          <div className="report-section">
+            <h3>Exit Analysis (Year {an.exitYr})</h3>
+            <div className="report-two-col">
+              <div>
+                {[['Sale Price', fmt(an.salePrice)], ['Selling Costs', `(${fmt(an.sellAmt)})`], ['Net Sale Proceeds', fmt(an.netProc)], ['Loan at Exit', `(${fmt(an.loanAtExit)})`], ['Gross Equity Proceeds', fmt(an.grossEqProc)]].map(([l, v]) =>
+                  <div key={l} className="report-stat-row"><label>{l}</label><span>{v}</span></div>)}
+              </div>
+              <div>
+                {[['Cost Base', fmt(an.costBase)], ['Capital Gain', fmt(an.capGain)], ['50% CGT Discount', `(${fmt(an.cgtDisc)})`], ['CGT Liability', `(${fmt(an.cgtLiab)})`], ['Net After CGT', fmt(an.netCGT)]].map(([l, v]) =>
+                  <div key={l} className="report-stat-row"><label>{l}</label><span>{v}</span></div>)}
+              </div>
+            </div>
+          </div>
+
+          <div className="report-section">
+            <h3>Year 1 Cash Flow Detail</h3>
+            {an.rows[0] && (() => {
+              const r = an.rows[0];
+              return (
+                <div className="report-two-col">
+                  <div>
+                    {[['Gross Rent', fmt(r.grossRent)], ['Vacancy Loss', `(${fmt(r.vacancy)})`], ['Net Rental Income', fmt(r.netRent)], ['Operating Expenses', `(${fmt(r.opExp)})`], ['Net Operating Income', fmt(r.noi)]].map(([l, v]) =>
+                      <div key={l} className="report-stat-row"><label>{l}</label><span>{v}</span></div>)}
+                  </div>
+                  <div>
+                    {[['Interest', `(${fmt(r.interest)})`], ['Principal', `(${fmt(r.principal)})`], ['Depreciation', `(${fmt(r.depr)})`], ['Tax Benefit', fmt(r.taxBen)], ['After-Tax Cash Flow', fmt(r.atCF)]].map(([l, v]) =>
+                      <div key={l} className="report-stat-row"><label>{l}</label><span>{v}</span></div>)}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+
+          <div className="report-section">
+            <h3>Disclaimer</h3>
+            <p style={{ fontSize:11, color:'#6b7280', lineHeight:1.6 }}>
+              This report is for informational purposes only and does not constitute financial, tax or legal advice.
+              Projections are based on assumptions provided and actual results may vary materially. Past performance is not indicative of future performance.
+              Stamp duty, CGT and tax calculations are estimates only — consult a qualified accountant or tax adviser before making investment decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── APP ────────────────────────────────────────────────────────── */
+function App() {
+  const [activeTab, setActiveTab] = useState('analysis');
+  const [properties, setProperties] = useState([newProp()]);
+  const [activePropIdx, setActivePropIdx] = useState(0);
+
+  const activeProp = properties[activePropIdx] || properties[0];
+  const inputs = activeProp.inputs;
+
+  const setInputs = useCallback(next => {
+    setProperties(ps => ps.map((p, i) => i === activePropIdx ? { ...p, inputs: next } : p));
+  }, [activePropIdx]);
+
+  const addProperty = () => {
+    const np = newProp();
+    setProperties(ps => [...ps, np]);
+    setActivePropIdx(properties.length);
+    setActiveTab('analysis');
+  };
+
+  const removeProperty = idx => {
+    if (properties.length === 1) return;
+    setProperties(ps => ps.filter((_, i) => i !== idx));
+    setActivePropIdx(Math.max(0, activePropIdx - (idx <= activePropIdx ? 1 : 0)));
+  };
+
+  const tabs = [
+    { id:'analysis',  label:'Analysis' },
+    { id:'portfolio', label:'Portfolio' },
+    { id:'scenarios', label:'Scenarios' },
+    { id:'cgt',       label:'CGT Calculator' },
+    { id:'report',    label:'Detailed Report' },
+  ];
+
+  const sideNav = [
+    { label:'Dashboard',     icon:'⊞' },
+    { label:'Analysis',      icon:'◎', tab:'analysis' },
+    { label:'Portfolio',     icon:'⊟', tab:'portfolio' },
+    { label:'Scenarios',     icon:'⋈', tab:'scenarios' },
+    { label:'CGT Calculator',icon:'⊕', tab:'cgt' },
+    { label:'Reports',       icon:'≡', tab:'report' },
+  ];
+
+  return (
+    <div className="app">
+      <div className="topbar">
+        <div className="topbar-logo">DISCO<span>CONSULT STRATEGY</span></div>
+        <div className="topbar-search">
+          <input placeholder="Search properties, reports, analyses…" />
+        </div>
+        <div style={{ fontSize:11, opacity:.7, marginLeft:'auto' }}>
+          {properties.length} propert{properties.length !== 1 ? 'ies' : 'y'}
+        </div>
+      </div>
+
+      <div className="body">
+        <div className="sidebar">
+          <div className="sidebar-nav">
+            {sideNav.map(item => (
+              <div key={item.label}
+                className={`sidebar-item${item.tab && activeTab === item.tab ? ' active' : ''}`}
+                onClick={() => item.tab && setActiveTab(item.tab)}>
+                <span style={{ fontSize:16 }}>{item.icon}</span>
+                {item.label}
+              </div>
+            ))}
+          </div>
+          <div className="sidebar-footer">
+            Disco Consult Strategy<br />
+            v2.0 · AUS Tax 2025–26
+          </div>
+        </div>
+
+        <div className="main">
+          <div className="tool-header">
+            <div className="tool-title">
+              <h2>Property Investment Analyser</h2>
+              <p>Real-time after-tax IRR, CGT &amp; cash flow modelling</p>
+            </div>
+            <div className="tab-nav">
+              {tabs.map(t => (
+                <button key={t.id} className={`tab-btn${activeTab === t.id ? ' active' : ''}`}
+                  onClick={() => setActiveTab(t.id)}>{t.label}</button>
+              ))}
+            </div>
+            <div className="toolbar">
+              <button className="toolbar-btn" onClick={addProperty}>+ New Property</button>
+            </div>
+          </div>
+
+          {(activeTab === 'analysis' || activeTab === 'cgt' || activeTab === 'report' || activeTab === 'scenarios') && (
+            <div className="property-bar">
+              <span>Property:</span>
+              <span className="property-tag">{inputs.address || 'Unnamed'}</span>
+              {properties.length > 1 && properties.map((p, i) => (
+                <button key={p.id}
+                  style={{ padding:'3px 10px', border:'1px solid', borderColor: i === activePropIdx ? '#1a2a4a' : '#d1d5db', borderRadius:12, background: i === activePropIdx ? '#1a2a4a' : 'white', color: i === activePropIdx ? 'white' : '#374151', fontSize:11, cursor:'pointer' }}
+                  onClick={() => setActivePropIdx(i)}>
+                  P{i + 1}
+                </button>
+              ))}
+              <span className="new-link" onClick={addProperty}>+ Add Property</span>
+            </div>
+          )}
+
+          <div className="content">
+            {activeTab === 'analysis'  && <AnalysisTab  inputs={inputs} onChange={setInputs} />}
+            {activeTab === 'portfolio' && <PortfolioTab properties={properties} onSelect={i => { setActivePropIdx(i); setActiveTab('analysis'); }} onAdd={addProperty} onRemove={removeProperty} />}
+            {activeTab === 'scenarios' && <ScenariosTab inputs={inputs} />}
+            {activeTab === 'cgt'       && <CGTTab       inputs={inputs} />}
+            {activeTab === 'report'    && <ReportTab    inputs={inputs} />}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
